@@ -3,23 +3,31 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="AgentsInTheCloud — coming soon.">
-  <meta name="theme-color" content="#171d29">
+  <meta name="description" content="AgentsInTheCloud — a home for your AI agents. Coming soon.">
+  <meta name="theme-color" content="#eadcc6">
+  <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <title>AgentsInTheCloud — Coming soon</title>
   <style>
-    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #171d29; color: #eceff4; }
+    :root { color-scheme: light; --font-sans: -apple-system, "Inter", "Segoe UI", system-ui, sans-serif; --color-bg: #eadcc6; --color-text: #342d26; --color-text-muted: #75634f; --color-accent: #955d2d; font-family: var(--font-sans); background: var(--color-bg); color: var(--color-text); }
     * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100svh; display: grid; place-items: center; padding: 2rem; background: radial-gradient(ellipse at 50% 0%, #283b4b, transparent 65%); }
-    main { width: min(100%, 52rem); text-align: center; }
-    .mark { display: inline-grid; place-items: center; width: 4rem; height: 4rem; margin-bottom: 2rem; border: 1px solid #88c0d04d; border-radius: 1rem; background: #88c0d00d; color: #88c0d0; font-size: 1rem; font-weight: 700; letter-spacing: .08em; }
-    h1 { margin: 0; font-size: clamp(1.7rem, 6vw, 3.8rem); font-weight: 650; letter-spacing: -.045em; overflow-wrap: anywhere; }
-    p { margin: 1.2rem 0 0; color: #aebacc; font-size: 1.1rem; line-height: 1.6; }
-    .status { display: inline-block; margin-top: 2.5rem; padding: .5rem 1rem; border: 1px solid #ffffff20; border-radius: 2rem; color: #88c0d0; font-size: .85rem; }
+    body { margin: 0; min-height: 100svh; display: grid; place-items: center; padding: clamp(1.25rem, 4vw, 3rem); background: radial-gradient(ellipse at 50% 35%, #fffaf18c, transparent 70%); }
+    main { width: min(100%, 70rem); padding-block: 1rem; text-align: center; }
+    picture { display: block; width: min(100%, 60rem); margin: 0 auto; }
+    .logo { display: block; width: 100%; height: auto; }
+    h1 { margin: .5rem 0 0; font-size: clamp(1.85rem, 6vw, 3.65rem); font-weight: 650; letter-spacing: -.045em; overflow-wrap: anywhere; }
+    p { margin: .8rem 0 0; color: var(--color-text-muted); font-size: clamp(1rem, 2vw, 1.15rem); line-height: 1.6; }
+    .status { display: inline-block; margin-top: 1.75rem; padding: .5rem 1rem; border: 1px solid #955d2d30; border-radius: 2rem; color: var(--color-accent); font-size: .8rem; letter-spacing: .04em; }
   </style>
 </head>
 <body>
   <main>
-    <div class="mark" aria-hidden="true">AITC</div>
+    <picture>
+      <source srcset="/assets/agents-in-the-cloud.webp" type="image/webp">
+      <img class="logo" src="/assets/agents-in-the-cloud.png" width="1536" height="1024" alt="Friendly robots together in a cloud-shaped workshop." fetchpriority="high">
+    </picture>
     <h1>AgentsInTheCloud</h1>
     <p>A home for your AI agents.</p>
     <span class="status">Coming soon</span>
