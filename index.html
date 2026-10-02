@@ -1,5 +1,374 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Run your favorite coding agent in the cloud. Not one but many. AgentsInTheCloud supports Claude Code, Codex, Pi, and a built-in agent."><meta name="theme-color" content="#eadcc6"><link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="stylesheet" href="/assets/design-system/design-system.css"><link rel="stylesheet" href="/assets/fonts.css"><link rel="stylesheet" href="/assets/site.css"><script type="module" src="/assets/site.js"></script><title>AgentsInTheCloud — Run your favorite coding agent in the cloud</title></head>
-<body><main><header class="hero"><picture><source srcset="/assets/agents-in-the-cloud.webp" type="image/webp"><img class="logo" src="/assets/agents-in-the-cloud.png" width="1536" height="1024" alt="Friendly robots together in a cloud-shaped workshop." fetchpriority="high"></picture><h1>AgentsInTheCloud</h1><div class="pitch"><h2 class="headline"><span class="sentence-lead">Run your <span class="favorite">favorite<span class="agent-orbit"><svg class="arrows" viewBox="0 0 270 210" aria-hidden="true"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M1 1 L6 3 L1 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></marker></defs><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arrow)"><path d="M110 93 Q72 83 58 54"/><path d="M160 93 Q196 88 216 65"/><path d="M110 118 Q77 131 61 159"/><path d="M164 119 Q205 125 204 158"/></g></svg><span class="agent agent--claude" data-controller="agent-info" data-action="pointerenter->agent-info#reset focusin->agent-info#reset focusout->agent-info#close keydown.esc->agent-info#dismiss"><button class="agent-trigger" type="button" aria-label="About Claude Code" aria-describedby="agent-claude-info" data-action="agent-info#toggle"><svg class="brand-icon" viewBox="0 0 24 24" role="img" aria-label="Claude Code" fill="currentColor"><path d="M17.3041 3.541h-3.6718l6.696 16.918H24Zm-10.6082 0L0 20.459h3.7442l1.3693-3.5527h7.0052l1.3693 3.5528h3.7442L10.5363 3.5409Zm-.3712 10.2232 2.2914-5.9456 2.2914 5.9456Z"></path></svg></button><span class="agent-tooltip" id="agent-claude-info" role="tooltip"><strong>Claude Code</strong>Anthropic’s coding agent. Explore your codebase, make changes, and work through tasks with Claude.</span></span><span class="agent agent--codex" data-controller="agent-info" data-action="pointerenter->agent-info#reset focusin->agent-info#reset focusout->agent-info#close keydown.esc->agent-info#dismiss"><button class="agent-trigger" type="button" aria-label="About Codex" aria-describedby="agent-codex-info" data-action="agent-info#toggle"><svg class="brand-icon" viewBox="0 0 24 24" role="img" aria-label="Codex" fill="currentColor"><path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"></path></svg></button><span class="agent-tooltip" id="agent-codex-info" role="tooltip"><strong>Codex</strong>OpenAI’s coding agent. Read, write, and debug code with your OpenAI account.</span></span><span class="agent agent--pi" data-controller="agent-info" data-action="pointerenter->agent-info#reset focusin->agent-info#reset focusout->agent-info#close keydown.esc->agent-info#dismiss"><button class="agent-trigger" type="button" aria-label="About Pi" aria-describedby="agent-pi-info" data-action="agent-info#toggle"><svg class="brand-icon" viewBox="0 0 24 24" role="img" aria-label="Pi" fill="currentColor"><path d="M18 12h-6V6H0V0h18v12Z" fill="#F09082"></path><path d="M6 24H0V6h6v6h6v6H6v6Z" fill="#4D9ABF"></path><path d="M24 24h-6V12h6v12Z" fill="#F1BE58"></path></svg></button><span class="agent-tooltip" id="agent-pi-info" role="tooltip"><strong>Pi</strong>A lightweight, extensible coding agent with support for models from multiple providers.</span></span><span class="agent agent--builtin" data-controller="agent-info" data-action="pointerenter->agent-info#reset focusin->agent-info#reset focusout->agent-info#close keydown.esc->agent-info#dismiss"><button class="agent-trigger" type="button" aria-label="About Built-in agent" aria-describedby="agent-builtin-info" data-action="agent-info#toggle"><img src="/assets/builtin-agent-64.png" width="40" height="40" alt=""></button><span class="agent-tooltip" id="agent-builtin-info" role="tooltip"><strong>Built-in agent</strong>AgentsInTheCloud’s integrated coding agent, with durable execution and your choice of supported models.</span></span></span></span></span> <span class="sentence-tail">coding agent in the cloud.</span></h2><p class="many">Not one but <em>many</em>.</p></div></header>
-<section class="getting-started" aria-label="Get started"><article class="watch"><div class="step-label">Step 1</div><h2>Watch this quick flythrough</h2><p>See if AgentsInTheCloud is interesting to you.</p><div class="video-placeholder" role="img" aria-label="Quick flythrough video placeholder; video coming soon"><span class="play-symbol" aria-hidden="true">▷</span><strong>A quick look around</strong><span>Video coming soon</span></div></article>
-<article class="install" data-controller="install"><div class="step-label">Step 2</div><h2>Give your agents a home</h2><p class="install-intro">On your dev machine, or on a server that stays on.</p><div class="install-stage"><div class="install-panel" data-install-target="panel" data-view="start"><button class="button primary" type="button" data-action="install#show" data-install-view-param="choices"><span class="button__caption">Install AgentsInTheCloud →</span></button><p class="under-button">Your machine. Your agents. Runs in Docker.</p></div><div class="install-panel" data-install-target="panel" data-view="choices" hidden><h3 tabindex="-1">Two ways to install:</h3><div class="install-choices"><button class="choice" type="button" data-action="install#show" data-install-view-param="dev"><span class="choice-number">1</span><span><strong>Easy and quick on your dev machine</strong><span>Get started right where you already code.</span></span><span aria-hidden="true">→</span></button><button class="choice" type="button" data-action="install#show" data-install-view-param="server"><span class="choice-number">2</span><span><strong>A bit more work, on a server</strong><span>Agents will continue to work when you close your laptop.</span></span><span aria-hidden="true">→</span></button></div><button class="button secondary" type="button" data-action="install#show" data-install-view-param="start"><span class="button__caption">← Back</span></button></div><div class="install-panel" data-install-target="panel" data-view="dev" hidden><h3 tabindex="-1">Install on your dev machine</h3><p>Run this Bash command in a terminal on your development machine:</p><div class="command"><pre><code data-install-target="devCommand">curl -fsSL https://agentsinthecloud.com/install.sh | bash -s -- --action install --access-mode localhost</code></pre><button class="button secondary" type="button" data-action="install#copy" data-install-command-param="dev"><span class="button__caption">Copy command</span></button></div><p class="install-note">macOS or Linux. On macOS, install and start Docker Desktop first. The installer opens AgentsInTheCloud locally. Your agents can work while your machine is awake.</p><button class="button secondary" type="button" data-action="install#show" data-install-view-param="choices"><span class="button__caption">← Choose another way</span></button><p class="script-note">This command downloads and runs the installer. <a href="https://github.com/lucasmeijer/atelier/blob/rename-agents-in-the-cloud/scripts/install.sh" target="_blank" rel="noopener">Read it first ↗</a></p></div><div class="install-panel" data-install-target="panel" data-view="server" hidden><h3 tabindex="-1">Install on a server</h3><p>Use a Mac mini in your closet, or a VPS from Hetzner or DigitalOcean. On that machine, run this Bash command:</p><div class="command"><pre><code data-install-target="serverCommand">curl -fsSL https://agentsinthecloud.com/install.sh | bash -s -- --action install --access-mode tailscale</code></pre><button class="button secondary" type="button" data-action="install#copy" data-install-command-param="server"><span class="button__caption">Copy command</span></button></div><p class="install-note">On a VPS, connect over SSH first. On a Mac mini, start Docker Desktop first. Follow the installer to sign in to Tailscale, then open the private address it prints. Agents keep working while the server stays on.</p><button class="button secondary" type="button" data-action="install#show" data-install-view-param="choices"><span class="button__caption">← Choose another way</span></button><p class="script-note">This command downloads and runs the installer. <a href="https://github.com/lucasmeijer/atelier/blob/rename-agents-in-the-cloud/scripts/install.sh" target="_blank" rel="noopener">Read it first ↗</a></p></div><p class="copy-feedback" data-install-target="feedback" role="status" aria-live="polite"></p></div><noscript><p>Installation requires a terminal on macOS or Linux. Run <code>curl -fsSL https://agentsinthecloud.com/install.sh | bash</code> and follow the prompts.</p></noscript></article></section><footer>Made for agents. Built for you. <a href="https://github.com/lucasmeijer/atelier" target="_blank" rel="noopener">Open source ↗</a></footer></main></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="AgentsInTheCloud — your coding agents, in their own environments, in the cloud. Free and open source.">
+  <meta name="theme-color" content="#eadcc6">
+  <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <title>AgentsInTheCloud</title>
+  <style>
+    @font-face { font-family: 'DM Sans'; font-style: normal; font-weight: 400 700; font-display: swap; src: url(/assets/fonts/dm-sans.woff2) format('woff2'); }
+    @font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 400; font-display: swap; src: url(/assets/fonts/jetbrains-mono-latin-400-normal.woff2) format('woff2'); }
+    :root { color-scheme: light; --font-sans: "DM Sans", system-ui, sans-serif; --font-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; --color-bg: #eadcc6; --color-text: #342d26; --color-text-muted: #75634f; --color-accent: #955d2d; --ink: #2b241e; font-family: var(--font-sans); background: var(--color-bg); color: var(--color-text); }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--color-bg); }
+    body { background: radial-gradient(ellipse at 50% 35%, #fffaf18c, transparent 70%) fixed, var(--color-bg); overflow-x: hidden; }
+
+    /* ---------- pinned story ---------- */
+    .story { position: relative; height: 100svh; overflow: hidden; }
+    .stage { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    /* positioned by story.js so the text sits right under the graphics, in stage units */
+    .captions { position: absolute; left: 0; top: 0; width: 100%; text-align: center; pointer-events: none; z-index: 2; }
+    .caption { position: absolute; left: 0; right: 0; top: 0; margin: 0 auto; font-size: 1em; font-weight: 450; letter-spacing: -.03em; line-height: 1.2; opacity: 0; visibility: hidden; text-wrap: balance; }
+    .caption .strong { font-weight: 650; }
+    .caption .accent { font-weight: 650; }
+    /* karaoke: words start dim and light up on their beat */
+    .caption .kw { color: #342d2633; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .caption .w { display: inline-block; }
+    .scroll-hint { position: absolute; left: 50%; bottom: clamp(1rem, 4vh, 2.2rem); transform: translateX(-50%); color: var(--color-text-muted); font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: .4rem; z-index: 2; }
+    .scroll-hint span { display: block; width: 1.4rem; height: 2.2rem; border: 2px solid currentColor; border-radius: 1rem; position: relative; }
+    .scroll-hint span::after { content: ""; position: absolute; left: 50%; top: .4rem; width: 4px; height: 6px; margin-left: -2px; border-radius: 2px; background: currentColor; animation: wheel 1.6s ease-in-out infinite; }
+    @keyframes wheel { 0% { transform: translateY(0); opacity: 1 } 80% { transform: translateY(.7rem); opacity: 0 } 100% { opacity: 0 } }
+    .progress { position: absolute; right: clamp(.6rem, 1.6vw, 1.4rem); top: 50%; transform: translateY(-50%); display: grid; gap: .55rem; z-index: 2; }
+    .progress i { display: block; width: 7px; height: 7px; border-radius: 50%; background: #955d2d33; transition: background .3s, transform .3s; }
+    .progress i.on { background: var(--color-accent); transform: scale(1.35); }
+
+    /* svg bits */
+    .mono { font-family: var(--font-mono); }
+    .sans { font-family: var(--font-sans); }
+    .beam { fill: none; stroke-linecap: round; }
+    .beam-dash { stroke-dasharray: 2 14; animation: flow 1.1s linear infinite; }
+    .beam-dash.rev { animation-direction: reverse; }
+    @keyframes flow { to { stroke-dashoffset: -32; } }
+    .blink { animation: blink 1.1s steps(2, start) infinite; }
+    .blink2 { animation: blink 0.7s steps(2, start) infinite; }
+    @keyframes blink { to { visibility: hidden; } }
+    .glow { animation: glow 2.4s ease-in-out infinite; }
+    .spin { transform-box: fill-box; transform-origin: center; animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes glow { 50% { opacity: .55; } }
+
+    /* ---------- icons: lift on hover, playful tooltip ---------- */
+    .stage { pointer-events: none; }
+    .stage .live { pointer-events: auto; cursor: pointer; }
+    .stage .hov { transition: transform .18s cubic-bezier(.3, 1.6, .5, 1); transform-box: fill-box; transform-origin: center; }
+    .stage .live:hover .hov { transform: translateY(-6px) rotate(-2deg); }
+    .stage .live[data-choice]:hover .hov { transform: translateY(-10px) rotate(-1deg); }
+    .tip { position: fixed; z-index: 50; width: max-content; max-width: 250px; padding: 12px 14px 11px; border: 2px solid var(--ink); border-radius: 14px; background: #fffaf2; color: var(--color-text); font-size: 13.5px; line-height: 1.45; box-shadow: 4px 5px 0 #2b241e2e; pointer-events: none; opacity: 0; transform: translateY(6px) scale(.96) rotate(-1deg); transform-origin: var(--nub, 50%) 100%; transition: opacity .14s, transform .2s cubic-bezier(.3, 1.6, .5, 1); }
+    .tip[data-side="bottom"] { transform-origin: var(--nub, 50%) 0; transform: translateY(-6px) scale(.96) rotate(1deg); }
+    .tip.on { opacity: 1; transform: none; }
+    .tip strong { display: block; font-size: 15px; font-weight: 700; letter-spacing: -.01em; margin-bottom: 2px; }
+    .tip em:empty { display: none; }
+    .tip em { display: block; margin-top: 6px; font-style: normal; font-weight: 600; font-size: 12px; color: var(--color-accent); }
+    .tip::after { content: ""; position: absolute; left: calc(var(--nub, 50%) - 8px); bottom: -9px; width: 14px; height: 14px; background: #fffaf2; border: 2px solid var(--ink); border-top: 0; border-left: 0; transform: rotate(45deg); }
+    .tip[data-side="bottom"]::after { bottom: auto; top: -9px; transform: rotate(-135deg); }
+
+    /* ---------- next steps (revealed after picking Mac or server) ---------- */
+    .next { min-height: 100svh; padding: clamp(3rem, 9vh, 6rem) 16px 4rem; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .next[data-kind="mac"] [data-for="server"], .next[data-kind="server"] [data-for="mac"] { display: none; }
+    .next-title { margin: 0; font-size: clamp(2rem, 4.4vw, 3.4rem); font-weight: 650; letter-spacing: -.045em; }
+    .next-title .accent { color: var(--color-accent); }
+    .steps { list-style: none; margin: clamp(2rem, 6vh, 3.5rem) 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: clamp(18px, 3vw, 36px); width: min(100%, 72rem); align-items: stretch; }
+    .step { position: relative; background: #fffaf2; border: 3px solid var(--ink); border-radius: 26px; box-shadow: 6px 8px 0 #2b241e2e; padding: 34px 22px 24px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+    .step:nth-child(1) { transform: rotate(-1.5deg); }
+    .step:nth-child(2) { transform: rotate(1deg); }
+    .next[data-kind="mac"] .steps { grid-template-columns: minmax(0, 36rem); justify-content: center; }
+    .next[data-kind="mac"] .step--cmd { transform: rotate(-1deg); padding-top: 28px; }
+    .why { border: 2px solid var(--ink); background: #f6e3c8; color: var(--ink); border-radius: 999px; padding: 4px 14px; font: 650 13px var(--font-sans); cursor: help; box-shadow: 0 2px 0 #2b241e40; transition: transform .18s cubic-bezier(.3, 1.6, .5, 1); }
+    .why:hover { transform: translateY(-3px) rotate(-3deg); }
+    .step p a { color: var(--color-accent); text-underline-offset: 3px; }
+    .hicons { display: flex; gap: 12px; }
+    .step p { margin: 0; font-size: clamp(1.05rem, 1.6vw, 1.3rem); font-weight: 550; letter-spacing: -.02em; line-height: 1.3; text-wrap: balance; }
+    .num { position: absolute; top: -20px; left: 50%; margin-left: -20px; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--color-accent); color: #fff8ec; font-weight: 700; border: 3px solid var(--ink); }
+    .hicon { display: grid; place-items: center; width: 78px; height: 78px; border-radius: 24px; background: #fff8ec; border: 1.5px solid #c6ad8a; box-shadow: 0 4px 0 #af89502e; transition: transform .18s cubic-bezier(.3, 1.6, .5, 1); }
+    a.hicon:hover { transform: translateY(-6px) rotate(-3deg); }
+    .hicon img { width: 46px; height: 46px; object-fit: contain; }
+    .cmd { width: 100%; background: var(--ink); border-radius: 14px; padding: 14px; text-align: left; }
+    .cmd code { display: block; color: #fff4df; font: 14px/1.7 var(--font-mono); white-space: nowrap; overflow-x: auto; }
+    .copy { margin-top: 12px; border: 0; border-radius: 10px; padding: 9px 16px; background: #f0a960; color: var(--ink); font: 650 14px var(--font-sans); cursor: pointer; box-shadow: 0 3px 0 #b66f2c; }
+    .copy:active { transform: translateY(2px); box-shadow: 0 1px 0 #b66f2c; }
+    .small { font-size: 13px; color: var(--color-accent); }
+    .switch { margin-top: 2.2rem; background: none; border: 0; color: var(--color-accent); font: 600 1rem var(--font-sans); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+    @media (max-width: 760px) { .steps { grid-template-columns: 1fr; gap: 34px; } .step:nth-child(n) { transform: none; } }
+    @media (prefers-reduced-motion: reduce) { .beam-dash, .blink, .blink2, .glow, .spin, .scroll-hint span::after { animation: none; } }
+  </style>
+</head>
+<body>
+
+<section class="story" id="story">
+  <div class="progress" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="scroll-hint" aria-hidden="true"><span></span>Scroll</div>
+
+  <svg class="stage" id="stage" viewBox="0 225 1600 905" preserveAspectRatio="xMidYMid meet" role="img" aria-label="An animated story: coding agents move from your laptop into isolated cloud environments.">
+    <defs>
+      <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="14"/></filter>
+      <filter id="softer" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="30"/></filter>
+      <linearGradient id="wallpaper" x1="0" y1="0" x2="0.4" y2="1">
+        <stop offset="0" stop-color="#f6c48a"/><stop offset=".5" stop-color="#d9825a"/><stop offset="1" stop-color="#7b4b5e"/>
+      </linearGradient>
+      <linearGradient id="closetIn" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#4a372b"/><stop offset=".55" stop-color="#5e4636"/><stop offset="1" stop-color="#3b2c22"/>
+      </linearGradient>
+      <radialGradient id="lampGlow" cx=".5" cy="0" r="1">
+        <stop offset="0" stop-color="#ffd58a" stop-opacity=".75"/><stop offset=".6" stop-color="#ffc66b" stop-opacity=".12"/><stop offset="1" stop-color="#ffc66b" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="cloudFill" cx=".5" cy=".35" r=".75">
+        <stop offset="0" stop-color="#fffaf1"/><stop offset="1" stop-color="#f1e3cc"/>
+      </radialGradient>
+      <clipPath id="screenClip"><rect x="0" y="0" width="640" height="400" rx="10"/></clipPath>
+      <linearGradient id="aluLid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9dadd"/><stop offset="1" stop-color="#b3b4b9"/></linearGradient>
+      <linearGradient id="aluBase" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ececef"/><stop offset=".55" stop-color="#cfd0d4"/><stop offset="1" stop-color="#9c9da3"/></linearGradient>
+      <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M1 1 L6 3 L1 5" fill="none" stroke="#955d2d" stroke-linecap="round" stroke-linejoin="round"/></marker>
+      <!-- brand marks, as on the homepage -->
+      <symbol id="brand-claude" viewBox="0 0 24 24"><path fill="#b2633f" d="M17.3041 3.541h-3.6718l6.696 16.918H24Zm-10.6082 0L0 20.459h3.7442l1.3693-3.5527h7.0052l1.3693 3.5528h3.7442L10.5363 3.5409Zm-.3712 10.2232 2.2914-5.9456 2.2914 5.9456Z"/></symbol>
+      <symbol id="brand-codex" viewBox="0 0 24 24"><path fill="#342d26" d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/></symbol>
+      <symbol id="brand-pi" viewBox="0 0 24 24"><path d="M18 12h-6V6H0V0h18v12Z" fill="#F09082"/><path d="M6 24H0V6h6v6h6v6H6v6Z" fill="#4D9ABF"/><path d="M24 24h-6V12h6v12Z" fill="#F1BE58"/></symbol>
+
+      <!-- ===== app icons (60x60) ===== -->
+      <symbol id="spark" viewBox="-50 -50 100 100">
+        <g fill="#d97757">
+          <path d="M-5 -46 L5 -46 L3 -6 L-3 -6 Z"/><path d="M-5 -46 L5 -46 L3 -6 L-3 -6 Z" transform="rotate(32)"/>
+          <path d="M-5 -46 L5 -46 L3 -6 L-3 -6 Z" transform="rotate(68)"/><path d="M-5 -46 L5 -46 L3 -6 L-3 -6 Z" transform="rotate(105)"/>
+          <path d="M-5 -46 L5 -46 L3 -6 L-3 -6 Z" transform="rotate(140)"/><path d="M-5 -46 L5 -46 L3 -6 L-3 -6 Z" transform="rotate(178)"/>
+          <path d="M-5 -46 L5 -46 L3 -6 L-3 -6 Z" transform="rotate(214)"/><path d="M-5 -46 L5 -46 L3 -6 L-3 -6 Z" transform="rotate(250)"/>
+          <path d="M-5 -46 L5 -46 L3 -6 L-3 -6 Z" transform="rotate(288)"/><path d="M-5 -46 L5 -46 L3 -6 L-3 -6 Z" transform="rotate(324)"/>
+          <circle r="9"/>
+        </g>
+      </symbol>
+      <symbol id="icon-claude" viewBox="0 0 60 60">
+        <rect x="2" y="2" width="56" height="56" rx="14" fill="#f4ece0" stroke="#2b241e" stroke-width="2.5"/>
+        <use href="#spark" x="12" y="12" width="36" height="36"/>
+      </symbol>
+      <symbol id="icon-chrome" viewBox="0 0 60 60">
+        <circle cx="30" cy="30" r="27" fill="#f2f2f2" stroke="#2b241e" stroke-width="2.5"/>
+        <path d="M30 30 L6.6 16.5 A27 27 0 0 1 53.4 16.5 Z" fill="#e2574c"/>
+        <path d="M30 30 L53.4 16.5 A27 27 0 0 1 30 57 Z" fill="#f4c443"/>
+        <path d="M30 30 L30 57 A27 27 0 0 1 6.6 16.5 Z" fill="#3fa45b"/>
+        <circle cx="30" cy="30" r="12" fill="#fff"/><circle cx="30" cy="30" r="9" fill="#4a86e8"/>
+        <circle cx="30" cy="30" r="27" fill="none" stroke="#2b241e" stroke-width="2.5"/>
+      </symbol>
+      <symbol id="icon-ghostty" viewBox="0 0 60 60">
+        <rect x="2" y="2" width="56" height="56" rx="14" fill="#2a2638" stroke="#2b241e" stroke-width="2.5"/>
+        <path d="M17 46 V27 a13 13 0 0 1 26 0 V46 l-4.5 -4 -4.5 4 -4 -4 -4 4 -4.5 -4 Z" fill="#f4f1ff"/>
+        <circle cx="25" cy="28" r="2.6" fill="#2a2638"/><circle cx="35" cy="28" r="2.6" fill="#2a2638"/>
+      </symbol>
+      <symbol id="icon-vscode" viewBox="0 0 60 60">
+        <rect x="2" y="2" width="56" height="56" rx="14" fill="#f4f7fb" stroke="#2b241e" stroke-width="2.5"/>
+        <path d="M40 10 L48 14 V46 L40 50 L20 32 L13 38 L9 36 V24 L13 22 L20 28 Z M40 21 L28 30 L40 39 Z" fill="#2f80ed" fill-rule="evenodd"/>
+        <path d="M40 10 L48 14 V46 L40 50 Z" fill="#1a63c7"/>
+      </symbol>
+      <symbol id="icon-codex" viewBox="0 0 60 60">
+        <rect x="2" y="2" width="56" height="56" rx="14" fill="#111" stroke="#2b241e" stroke-width="2.5"/>
+        <path d="M17 22 L27 30 L17 38" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M31 39 H43" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="icon-pi" viewBox="0 0 60 60">
+        <rect x="2" y="2" width="56" height="56" rx="14" fill="#fff" stroke="#2b241e" stroke-width="2.5"/>
+        <path d="M15 21 H45 M24 21 C24 32 22 38 18 43 M36 21 V38 C36 42 38 43 42 41" fill="none" stroke="#111" stroke-width="4.5" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="icon-finder" viewBox="0 0 60 60">
+        <rect x="2" y="2" width="56" height="56" rx="14" fill="#6fb6f2" stroke="#2b241e" stroke-width="2.5"/>
+        <path d="M30 2 C26 20 26 34 32 38 L28 58 H44 A14 14 0 0 0 58 44 V16 A14 14 0 0 0 44 2 Z" fill="#e8f3fd"/>
+        <path d="M20 20 V26 M40 20 V26 M18 41 Q30 49 42 41" stroke="#2b241e" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="icon-trash" viewBox="0 0 60 60">
+        <path d="M14 14 H46 L42 54 H18 Z" fill="#e9eef2" stroke="#2b241e" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M24 22 L25 46 M30 22 V46 M36 22 L35 46" stroke="#9aa6b0" stroke-width="2"/>
+      </symbol>
+
+      <!-- ===== app contents (520x294) ===== -->
+      <symbol id="c-claude" viewBox="0 0 520 294">
+        <rect width="520" height="294" fill="#1f1b18"/>
+        <g class="mono" font-size="14" fill="#e9e1d6">
+          <rect x="14" y="12" width="300" height="56" rx="6" fill="none" stroke="#d97757" stroke-width="1.5"/>
+          <text x="28" y="36" fill="#d97757">✻ <tspan fill="#f5ede2" font-weight="700">Welcome to Claude Code!</tspan></text>
+          <text x="28" y="56" fill="#8f8478" font-size="12">cwd: ~/app</text>
+          <text x="16" y="96"><tspan fill="#8f8478">&gt;</tspan> fix the flaky login test</text>
+          <text x="16" y="126"><tspan fill="#d97757">●</tspan> Read(src/auth/login.test.ts)</text>
+          <text x="16" y="146" fill="#8f8478">  ⎿ Read 84 lines</text>
+          <text x="16" y="172"><tspan fill="#d97757">●</tspan> Update(src/auth/login.ts)</text>
+          <text x="16" y="192" fill="#8f8478">  ⎿ <tspan fill="#7fc27a">+3</tspan> <tspan fill="#e0796d">−1</tspan></text>
+          <text x="16" y="218"><tspan fill="#d97757">●</tspan> Bash(npm test)</text>
+          <text x="16" y="238" fill="#8f8478">  ⎿ <tspan fill="#7fc27a">42 passed</tspan></text>
+          <text x="16" y="272" fill="#d97757">✻ <tspan font-style="italic">Thinking…</tspan></text>
+        </g>
+      </symbol>
+      <symbol id="c-claude-welcome" viewBox="0 0 520 294">
+        <rect width="520" height="294" fill="#1f1b18"/>
+        <rect x="12" y="16" width="496" height="150" rx="6" fill="none" stroke="#d97757" stroke-width="1.5"/>
+        <rect x="24" y="9" width="132" height="14" fill="#1f1b18"/>
+        <text x="30" y="20" class="mono" font-size="12" fill="#d97757">Claude Code v2.1</text>
+        <g class="mono" font-size="12" fill="#e9e1d6">
+          <text x="132" y="48" text-anchor="middle" font-weight="700" font-size="14" fill="#f5ede2">Welcome back!</text>
+          <!-- the blocky mascot -->
+          <g transform="translate(96 62) scale(1.3)" fill="#d97757">
+            <rect x="7" y="0" width="42" height="21"/>
+            <rect x="0" y="7" width="7" height="7"/><rect x="49" y="7" width="7" height="7"/>
+            <rect x="10" y="21" width="4" height="7"/><rect x="17" y="21" width="4" height="7"/><rect x="35" y="21" width="4" height="7"/><rect x="42" y="21" width="4" height="7"/>
+            <rect x="15" y="5" width="4" height="6" fill="#1f1b18"/><rect x="37" y="5" width="4" height="6" fill="#1f1b18"/>
+          </g>
+          <text x="132" y="126" text-anchor="middle" fill="#8f8478">Opus · Claude Max</text>
+          <text x="132" y="144" text-anchor="middle" fill="#8f8478">~/app</text>
+          <path d="M252 30 V152" stroke="#d9775766"/>
+          <text x="266" y="44" font-weight="700" fill="#d97757">Tips for getting started</text>
+          <text x="266" y="64">Run /init to create a CLAUDE.md</text>
+          <path d="M266 82 H494" stroke="#d9775744"/>
+          <text x="266" y="102" font-weight="700" fill="#d97757">Recent activity</text>
+          <text x="266" y="122" fill="#8f8478">No recent activity</text>
+          <path d="M12 206 H508 M12 246 H508" stroke="#6b625a"/>
+          <text x="18" y="231" font-size="14"><tspan fill="#e9e1d6">&gt; </tspan><tspan fill="#8f8478">Try "fix the flaky login test"</tspan></text>
+          <text x="18" y="268" font-size="11" fill="#8f8478">? for shortcuts</text>
+        </g>
+      </symbol>
+      <symbol id="c-page" viewBox="0 0 520 294">
+        <rect width="520" height="294" fill="#fbf7f1"/>
+        <rect width="520" height="40" fill="#955d2d"/>
+        <circle cx="26" cy="20" r="9" fill="#f6d7b0"/>
+        <rect x="44" y="15" width="70" height="10" rx="5" fill="#f6d7b0"/>
+        <rect x="380" y="14" width="50" height="12" rx="6" fill="#f6d7b080"/><rect x="440" y="14" width="60" height="12" rx="6" fill="#f6d7b080"/>
+        <rect x="150" y="66" width="220" height="196" rx="12" fill="#fff" stroke="#e2d6c6" stroke-width="2"/>
+        <text x="260" y="102" text-anchor="middle" class="sans" font-weight="700" font-size="20" fill="#342d26">Sign in</text>
+        <rect x="174" y="122" width="172" height="28" rx="7" fill="#f4eee6" stroke="#e2d6c6"/>
+        <rect x="174" y="160" width="172" height="28" rx="7" fill="#f4eee6" stroke="#e2d6c6"/>
+        <rect x="182" y="132" width="70" height="8" rx="4" fill="#cbbba6"/><rect x="182" y="170" width="50" height="8" rx="4" fill="#cbbba6"/>
+        <rect x="174" y="204" width="172" height="34" rx="9" fill="#955d2d"/>
+        <text x="260" y="226" text-anchor="middle" class="sans" font-weight="600" font-size="14" fill="#fff">Continue</text>
+      </symbol>
+      <symbol id="c-ghostty" viewBox="0 0 520 294">
+        <rect width="520" height="294" fill="#221e2c"/>
+        <g class="mono" font-size="14" fill="#e6e1f5">
+          <text x="16" y="30"><tspan fill="#a58cf0">~/app</tspan> <tspan fill="#7fc27a">❯</tspan> npm test</text>
+          <text x="16" y="56"><tspan fill="#221e2c" style="paint-order:stroke" stroke="#7fc27a" stroke-width="16"> PASS </tspan> src/auth/login.test.ts</text>
+          <text x="16" y="80"><tspan fill="#221e2c" style="paint-order:stroke" stroke="#7fc27a" stroke-width="16"> PASS </tspan> src/api/user.test.ts</text>
+          <text x="16" y="106">Tests:  <tspan fill="#7fc27a">42 passed</tspan>, 42 total</text>
+          <text x="16" y="126" fill="#8a84a0">Time:   3.21 s</text>
+          <text x="16" y="160"><tspan fill="#a58cf0">~/app</tspan> <tspan fill="#7fc27a">❯</tspan> git status -s</text>
+          <text x="16" y="184"><tspan fill="#e0b65b"> M</tspan> src/auth/login.ts</text>
+          <text x="16" y="218"><tspan fill="#a58cf0">~/app</tspan> <tspan fill="#7fc27a">❯</tspan> <tspan class="blink">█</tspan></text>
+        </g>
+      </symbol>
+      <symbol id="c-vscode" viewBox="0 0 520 294">
+        <rect width="520" height="294" fill="#1e1e22"/>
+        <rect width="34" height="294" fill="#2c2c33"/>
+        <g fill="#8b8b96"><rect x="9" y="12" width="16" height="16" rx="3"/><rect x="9" y="44" width="16" height="16" rx="8"/><rect x="9" y="76" width="16" height="16" rx="3"/></g>
+        <rect x="34" width="122" height="294" fill="#25252b"/>
+        <g class="sans" font-size="11" fill="#b9b9c4">
+          <text x="44" y="22" font-size="9" letter-spacing="1" fill="#8b8b96">EXPLORER</text>
+          <text x="44" y="46">▾ src</text><text x="58" y="66">▾ auth</text>
+          <rect x="34" y="72" width="122" height="20" fill="#37373f"/>
+          <text x="72" y="86" fill="#fff">login.ts</text><text x="72" y="106">login.test.ts</text>
+          <text x="58" y="126">▸ api</text><text x="44" y="146">package.json</text><text x="44" y="166">README.md</text>
+        </g>
+        <rect x="156" width="364" height="26" fill="#25252b"/>
+        <rect x="156" width="96" height="26" fill="#1e1e22"/>
+        <text x="170" y="17" class="sans" font-size="11" fill="#fff">login.ts</text>
+        <g class="mono" font-size="12.5">
+          <g fill="#6b6b78"><text x="166" y="52">1</text><text x="166" y="72">2</text><text x="166" y="92">3</text><text x="166" y="112">4</text><text x="166" y="132">5</text><text x="166" y="152">6</text><text x="166" y="172">7</text></g>
+          <text x="186" y="52"><tspan fill="#c586c0">import</tspan><tspan fill="#d4d4d4"> { signIn } </tspan><tspan fill="#c586c0">from</tspan><tspan fill="#ce9178"> './api'</tspan></text>
+          <text x="186" y="92"><tspan fill="#569cd6">export async function</tspan><tspan fill="#dcdcaa"> login</tspan><tspan fill="#d4d4d4">(u, p) {</tspan></text>
+          <text x="186" y="112"><tspan fill="#569cd6">  const</tspan><tspan fill="#9cdcfe"> res</tspan><tspan fill="#d4d4d4"> = </tspan><tspan fill="#c586c0">await</tspan><tspan fill="#dcdcaa"> signIn</tspan><tspan fill="#d4d4d4">(u, p)</tspan></text>
+          <rect x="182" y="118" width="330" height="20" fill="#2f7a3a55"/>
+          <text x="186" y="132"><tspan fill="#c586c0">  if</tspan><tspan fill="#d4d4d4"> (!res.ok) </tspan><tspan fill="#c586c0">return</tspan><tspan fill="#dcdcaa"> retry</tspan><tspan fill="#d4d4d4">()</tspan></text>
+          <text x="186" y="152"><tspan fill="#c586c0">  return</tspan><tspan fill="#9cdcfe"> res</tspan><tspan fill="#d4d4d4">.session</tspan></text>
+          <text x="186" y="172" fill="#d4d4d4">}</text>
+        </g>
+        <rect y="274" width="520" height="20" fill="#2f80ed"/>
+        <text x="44" y="288" class="sans" font-size="10" fill="#fff">main ✓   Ln 5, Col 32   TypeScript</text>
+      </symbol>
+
+      <!-- ===== app windows (520x320) ===== -->
+      <symbol id="w-claude" viewBox="0 0 520 320">
+        <rect x="1.5" y="1.5" width="517" height="317" rx="12" fill="#1f1b18" stroke="#2b241e" stroke-width="3"/>
+        <path d="M1.5 27 V13.5 a12 12 0 0 1 12 -12 h493 a12 12 0 0 1 12 12 V27 Z" fill="#3a332d"/>
+        <circle cx="18" cy="14" r="5.5" fill="#ec6a5e"/><circle cx="36" cy="14" r="5.5" fill="#f4bf4f"/><circle cx="54" cy="14" r="5.5" fill="#61c554"/>
+        <text x="260" y="19" text-anchor="middle" class="sans" font-size="12" fill="#cfc4b6">claude — ~/app</text>
+        <svg x="3" y="27" width="514" height="290" viewBox="0 0 520 294" preserveAspectRatio="xMinYMin slice"><use href="#c-claude-welcome" width="520" height="294"/></svg>
+      </symbol>
+      <symbol id="w-chrome" viewBox="0 0 520 320">
+        <rect x="1.5" y="1.5" width="517" height="317" rx="12" fill="#fbf7f1" stroke="#2b241e" stroke-width="3"/>
+        <path d="M1.5 54 V13.5 a12 12 0 0 1 12 -12 h493 a12 12 0 0 1 12 12 V54 Z" fill="#e6ddd0"/>
+        <circle cx="18" cy="14" r="5.5" fill="#ec6a5e"/><circle cx="36" cy="14" r="5.5" fill="#f4bf4f"/><circle cx="54" cy="14" r="5.5" fill="#61c554"/>
+        <path d="M74 27 V12 a6 6 0 0 1 6 -6 h120 a6 6 0 0 1 6 6 V27 Z" fill="#fbf7f1"/>
+        <text x="86" y="21" class="sans" font-size="11" fill="#342d26">My App</text>
+        <rect x="70" y="31" width="436" height="18" rx="9" fill="#fff" stroke="#d8ccbb"/>
+        <text x="84" y="44" class="sans" font-size="11" fill="#5d5145">localhost:3000/login</text>
+        <svg x="3" y="54" width="514" height="263" viewBox="0 0 520 294" preserveAspectRatio="xMidYMin slice"><use href="#c-page" width="520" height="294"/></svg>
+      </symbol>
+      <symbol id="w-ghostty" viewBox="0 0 520 320">
+        <rect x="1.5" y="1.5" width="517" height="317" rx="12" fill="#221e2c" stroke="#2b241e" stroke-width="3"/>
+        <path d="M1.5 27 V13.5 a12 12 0 0 1 12 -12 h493 a12 12 0 0 1 12 12 V27 Z" fill="#332d42"/>
+        <circle cx="18" cy="14" r="5.5" fill="#ec6a5e"/><circle cx="36" cy="14" r="5.5" fill="#f4bf4f"/><circle cx="54" cy="14" r="5.5" fill="#61c554"/>
+        <text x="260" y="19" text-anchor="middle" class="sans" font-size="12" fill="#c9c2dc">ghostty — ~/app</text>
+        <svg x="3" y="27" width="514" height="290" viewBox="0 0 520 294" preserveAspectRatio="xMinYMin slice"><use href="#c-ghostty" width="520" height="294"/></svg>
+      </symbol>
+      <symbol id="w-vscode" viewBox="0 0 520 320">
+        <rect x="1.5" y="1.5" width="517" height="317" rx="12" fill="#1e1e22" stroke="#2b241e" stroke-width="3"/>
+        <path d="M1.5 27 V13.5 a12 12 0 0 1 12 -12 h493 a12 12 0 0 1 12 12 V27 Z" fill="#33333b"/>
+        <circle cx="18" cy="14" r="5.5" fill="#ec6a5e"/><circle cx="36" cy="14" r="5.5" fill="#f4bf4f"/><circle cx="54" cy="14" r="5.5" fill="#61c554"/>
+        <text x="260" y="19" text-anchor="middle" class="sans" font-size="12" fill="#c8c8d2">login.ts — app</text>
+        <svg x="3" y="27" width="514" height="290" viewBox="0 0 520 294" preserveAspectRatio="xMinYMin slice"><use href="#c-vscode" width="520" height="294"/></svg>
+      </symbol>
+    </defs>
+
+    <!-- layers, filled in by story.js -->
+    <g id="layer-closet"></g>
+    <g id="layer-beams"></g>
+    <g id="layer-laptop"></g>
+    <g id="layer-cloud"></g>
+    <g id="layer-fly"></g>
+    <g id="layer-logos"></g>
+    <g id="layer-badges"></g>
+  </svg>
+  <div class="captions" aria-live="polite">
+    <h2 class="caption sr-only" data-step="0">Take your favorite coding agent,</h2>
+    <!-- data-beat = timeline time at which that phrase lights up (words within it ripple) -->
+    <h2 class="caption" data-step="1"><span data-beat="2.5">Your</span> <span class="strong" data-beat="3.4" data-arrow="chrome">browser,</span> <span class="strong" data-beat="4.0" data-arrow="ghostty">terminal</span> <span data-beat="4.4">and</span> <span class="strong" data-beat="4.6" data-arrow="vscode">VS&nbsp;Code,</span></h2>
+    <h2 class="caption" data-step="2"><span class="strong" data-beat="6.4">Out of your laptop,</span> <span data-beat="7.0">and into an</span> <span class="strong" data-beat="7.5">isolated environment</span> <span data-beat="8.2">in the</span> <span class="accent" data-beat="8.5">cloud.</span></h2>
+    <h2 class="caption" data-step="3"><span data-beat="13.3">Not one, but</span> <span class="accent" data-beat="17.1">many.</span> <span data-beat="19.9">A fresh environment</span> <span class="strong" data-beat="22.7">for every little task.</span></h2>
+    <h2 class="caption" data-step="4"><span data-beat="24.8">The cloud can just be</span> <span class="accent" data-beat="25.6">your own computer</span> <span class="accent" data-beat="26.8">in a closet.</span></h2>
+    <h2 class="caption" data-step="5"><span class="strong" data-beat="30.4" data-arrow="free">Free.</span> <span class="strong" data-beat="32.1" data-arrow="oss">Open&nbsp;source.</span> <span data-beat="33.7" data-arrow="any">Any model, any subscription.</span></h2>
+    <h2 class="caption" data-step="6"><span class="strong" data-beat="37.6">Get in!</span> <span class="accent" data-beat="38.2">We’re building!</span></h2>
+    <h2 class="caption" data-step="7"><span data-beat="40.9">Two ways in:</span> <span class="strong" data-beat="41.2">on your Mac,</span> <span data-beat="41.7">or on a</span> <span class="strong" data-beat="41.9">server.</span></h2>
+  </div>
+</section>
+
+<section class="next" id="next" data-kind="mac">
+  <h2 class="next-title"><span data-for="mac">Your Mac it is.</span><span data-for="server">A server it is.</span></h2>
+  <ol class="steps">
+    <li class="step" data-for="server">
+      <span class="num">1</span>
+      <span class="hicons">
+        <a class="hicon" data-tip="hetzner" href="https://www.hetzner.com/cloud/" target="_blank" rel="noopener"><img src="/assets/logos/si-hetzner.svg" alt="Hetzner"></a>
+        <a class="hicon" data-tip="digitalocean" href="https://www.digitalocean.com/products/droplets" target="_blank" rel="noopener"><img src="/assets/logos/si-digitalocean.svg" alt="DigitalOcean"></a>
+      </span>
+      <p>Get a server. Bigger is better. Maybe on <a href="https://www.hetzner.com/cloud/" target="_blank" rel="noopener">Hetzner</a>, <a href="https://www.digitalocean.com/products/droplets" target="_blank" rel="noopener">DigitalOcean</a>, or an old machine in your&nbsp;closet.</p>
+    </li>
+    <li class="step" data-for="server">
+      <span class="num">2</span>
+      <a class="hicon" data-tip="tailscale" href="https://tailscale.com/download" target="_blank" rel="noopener"><img src="/assets/logos/si-tailscale.svg" alt="Tailscale"></a>
+      <p>Get <a href="https://tailscale.com/download" target="_blank" rel="noopener">Tailscale</a> on your dev&nbsp;machine.</p>
+      <button class="why" type="button" data-tip="why">Why?</button>
+    </li>
+    <li class="step step--cmd">
+      <span class="num" data-for="server">3</span>
+      <p>Paste this into a terminal <span data-for="mac">on your Mac.</span><span data-for="server">on your server.</span></p>
+      <div class="cmd">
+        <code>curl -fsSL https://agentsinthecloud.com/install.sh | bash</code>
+        <button class="copy" type="button">Copy</button>
+      </div>
+      <a class="small" href="https://github.com/lucasmeijer/atelier/blob/rename-agents-in-the-cloud/scripts/install.sh" target="_blank" rel="noopener">Read the installer first ↗</a>
+    </li>
+  </ol>
+  <button class="switch" type="button"><span data-for="mac">Rather on a server?</span><span data-for="server">Rather on your Mac?</span></button>
+</section>
+
+<script src="/vendor/gsap.min.js"></script>
+<script src="/vendor/ScrollTrigger.min.js"></script>
+<script src="/story.js"></script>
+</body>
+</html>
