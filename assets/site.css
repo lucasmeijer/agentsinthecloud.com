@@ -92,12 +92,15 @@ footer { margin: 36px 0 0; border-top: 1px solid #c4ab8955; padding: 20px 0 28px
   .install-stage { min-height: 0; }
   .agent-tooltip { width: 210px; }
   .install-panel > .button.primary { font-size: 18px; padding-inline: 12px; }
-  @media (max-width: 380px) {
+  footer { gap: 16px; line-height: 1.6; }
+}
+@media (max-width: 380px) {
   .headline { font-size: 22px; }
   .agent-orbit { width: 216px; left: calc(50% - 108px); }
   .agent--codex { right: 12px; }
   .agent--builtin { right: 28px; }
-  @media (prefers-reduced-motion: reduce) { .agent-trigger { transition: none; } }
+}
+@media (prefers-reduced-motion: reduce) { .agent-trigger { transition: none; } }
 
 .agent-tooltip::before { content: ""; position: absolute; top: -14px; left: 0; right: 0; height: 14px; }
 .agent[data-dismissed] .agent-tooltip { display: none; }
