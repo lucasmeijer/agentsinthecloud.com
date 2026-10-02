@@ -1,0 +1,43 @@
+.tab-strip { position: relative; display: flex; flex: 1; align-self: stretch; align-items: center; min-width: 0; padding-block: 4px; }
+.tab-strip__tabs { display: flex; flex: 1; align-items: center; gap: 4px; min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; }
+.tab-strip__tabs::-webkit-scrollbar { display: none; }
+/* Content-sized short tabs; longer tabs shrink to 7rem before scrolling. */
+.tab-strip__tabs > .action-item { --tab-content-width: 20rem; flex: 0 1 min(20rem, var(--tab-content-width)); min-width: min(7rem, var(--tab-content-width)); user-select: none; -webkit-user-select: none; }
+.tab-strip__tabs > .action-item > .action-item__primary { padding-inline-end: 0; }
+.tab-strip__status { display: inline-flex; }
+.tab-strip__status[hidden], .tab-strip__status [hidden] { display: none; }
+.tab-strip__tabs .action-item__primary:has(> .action-item__metadata > .tab-strip__status:not([hidden])) > .action-item__content { flex: 0 1 auto; }
+/* A title without a status marker needs its own trailing breathing room. */
+.tab-strip__tabs > .action-item:not(:has(> .action-item__primary > .action-item__metadata > .tab-strip__status:not([hidden]))) { padding-inline-end: 8px; }
+@media (min-width: 701px) and (hover: hover) and (pointer: fine) {
+  /* Close replaces status, never changes intrinsic width, and frees title space. */
+  .tab-strip__tabs > .action-item:has(> .action-item__actions--engaged):is(:hover, :has(:focus-visible), :has(> .action-item__actions--engaged :popover-open)) > .action-item__primary > .action-item__metadata { display: none; }
+}
+@media (max-width: 700px), (hover: none), (pointer: coarse) {
+  /* Touch reveals close through selection, not hover. Unselected tabs keep status. */
+  .tab-strip__tabs > .action-item { padding-inline-end: 8px; }
+  .tab-strip__tabs > .action-item:has(> .action-item__actions--engaged) > .action-item__primary { flex: 1; }
+  .tab-strip__tabs .action-item__actions--engaged { display: none; position: static; }
+  .tab-strip__tabs > .action-item:has(> .action-item__primary[aria-selected="true"]) > .action-item__actions--engaged { display: flex; opacity: 1; pointer-events: auto; }
+  .tab-strip__tabs > .action-item:has(> .action-item__primary[aria-selected="true"] + .action-item__actions--engaged) > .action-item__primary > .action-item__metadata { display: none; }
+}
+/* These masks are independent: strip edges fade clipped tabs; title edges fade text,
+   leaving status and close controls crisp. The controller removes fades at the end. */
+.tab-strip__tabs, .tab-strip__tabs .action-item .action-item__label {
+  --tab-fade-left: 0px;
+  --tab-fade-right: 0px;
+  mask-image: linear-gradient(to right, transparent, black var(--tab-fade-left), black calc(100% - var(--tab-fade-right)), transparent);
+}
+.tab-strip__tabs[data-cut-left] { --tab-fade-left: 20px; }
+.tab-strip__tabs[data-cut-right] { --tab-fade-right: 24px; }
+.tab-strip__tabs .action-item .action-item__label-text { text-overflow: clip; }
+.tab-strip__tabs .action-item[data-title-cut-left] .action-item__label { --tab-fade-left: 12px; }
+.tab-strip__tabs .action-item[data-title-cut-right] .action-item__label { --tab-fade-right: 16px; }
+/* The transparent hit area stays active so moving from a tab to the thumb cannot
+   break hover. Neither revealing nor dragging the scrollbar reserves layout space. */
+.tab-strip__scrollbar { position: absolute; inset-inline: 0; bottom: 0; height: 12px; opacity: 0; touch-action: none; cursor: default; }
+.tab-strip:is(:hover, :has(:focus-visible)) > .tab-strip__scrollbar,
+.tab-strip__scrollbar:is(:hover, [data-dragging]) { opacity: 1; }
+.tab-strip__scrollbar-thumb { position: absolute; bottom: 1px; left: 0; height: 4px; width: var(--tab-scroll-thumb-width); transform: translateX(var(--tab-scroll-thumb-offset)); background: var(--text-muted); border-radius: var(--radius-round); }
+.tab-strip__scrollbar:focus-visible { outline: none; }
+.tab-strip__scrollbar:focus-visible > .tab-strip__scrollbar-thumb { background: var(--accent); }

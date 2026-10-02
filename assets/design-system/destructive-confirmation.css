@@ -1,0 +1,23 @@
+/* The original content is a sizing floor; a longer opt-out can grow the button. */
+.destructive-confirmation { display: inline-flex; min-width: 0; max-width: 100%; align-items: center; }
+.destructive-confirmation__trigger { display: inline-grid; }
+.destructive-confirmation__trigger > * { grid-area: 1 / 1; }
+.destructive-confirmation__cancel { display: none; align-items: center; justify-content: center; }
+.destructive-confirmation__trigger[aria-expanded="true"] > :first-child { visibility: hidden; }
+.destructive-confirmation__trigger[aria-expanded="true"] .destructive-confirmation__cancel { display: flex; }
+/* Reset the native popover's panel paint; PopupPosition owns its viewport bounds. */
+.destructive-confirmation__confirm { position: fixed; inset: auto; width: max-content; height: auto; box-sizing: border-box; margin: 0; padding: 0; border: 0; background: transparent; overflow: auto; }
+.destructive-confirmation__confirm .button { min-width: 0; max-width: 100%; height: auto; white-space: normal; overflow-wrap: anywhere; }
+
+/* Native dismissal remains immediate; only its exiting visual is retained. */
+@media (prefers-reduced-motion: no-preference) {
+  .destructive-confirmation__confirm {
+    opacity: 0;
+    transform: scale(.98);
+    transition: opacity var(--motion-exit) var(--motion-ease-out), transform var(--motion-exit) var(--motion-ease-out), display var(--motion-exit) allow-discrete, overlay var(--motion-exit) allow-discrete;
+  }
+  .destructive-confirmation__confirm:popover-open { opacity: 1; transform: scale(1); }
+  .destructive-confirmation__trigger[aria-expanded="true"] .destructive-confirmation__cancel {
+    animation: motion-reveal var(--motion-exit) var(--motion-ease-out);
+  }
+}

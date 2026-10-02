@@ -1,0 +1,21 @@
+/* A long-running button traces determinate or indeterminate progress around its stable perimeter. */
+.button.progress-button { --button-progress: 0; }
+.progress-button[data-progress-state="in-progress"],
+.progress-button[data-progress-state="in-progress"]:disabled,
+.progress-button[data-progress-state="in-progress"][aria-disabled="true"] { opacity: 1; }
+.progress-button[data-progress-state="in-progress"]:disabled .progress-button__content,
+.progress-button[data-progress-state="in-progress"][aria-disabled="true"] .progress-button__content { pointer-events: none; }
+.progress-button:not([data-progress-state="in-progress"]) .progress-button__perimeter { opacity: 0; }
+.button .progress-button__perimeter rect {
+  stroke: var(--accent);
+  stroke-dasharray: var(--button-progress) 100;
+  transition: stroke-dasharray 150ms linear;
+}
+.progress-button[data-progress-state="in-progress"][data-progress-kind="indeterminate"] .progress-button__perimeter rect {
+  stroke-dasharray: 18 82;
+  animation: perimeter-button-orbit 900ms linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .progress-button[data-progress-state="in-progress"][data-progress-kind="indeterminate"] .progress-button__perimeter rect { animation: none; stroke-dasharray: 40 60; }
+  .button .progress-button__perimeter rect { transition: none; }
+}

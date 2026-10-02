@@ -1,0 +1,355 @@
+@import "./warning-banner.css";
+@import "./markdown.css";
+@import "./text-entry.css";
+@import "./managed-list.css";
+@import "./status.css";
+@import "./icons.css";
+@import "./floating-surface.css";
+@import "./autocomplete.css";
+@import "./surface-lighting.css";
+@import "./panel.css";
+@import "./popup.css";
+@import "./dialog.css";
+@import "./action-item.css";
+@import "./tab-strip.css";
+@import "./perimeter-button.css";
+@import "./activity-button.css";
+@import "./progress-button.css";
+@import "./comparison-ring.css";
+@import "./button.css";
+@import "./button-group.css";
+@import "./copy-button.css";
+@import "./destructive-confirmation.css";
+@import "./transient-feedback.css";
+@import "./toggle.css";
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/jetbrains-mono-latin-400-normal.woff2") format("woff2");
+}
+
+/*
+ * AgentsInTheCloud design system
+ *
+ * This file is the shared visual interface for the shell and every workspace
+ * module. Tokens describe visual roles rather than accumulated measurements.
+ * Theme blocks assign only fundamental colors; derived states are shared.
+ */
+
+:root {
+  /* Brief state changes, inspired by transitions.dev. */
+  --motion-enter: 250ms;
+  --motion-exit: 150ms;
+  --motion-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Typography */
+  --font-sans: -apple-system, "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
+
+  --text-body: 14px;
+  --text-title: 16px;
+  --text-code: 12px;
+
+  --leading-none: 1;
+  --leading-tight: 1.2;
+  --leading-standard: 1.5;
+  --leading-copy: 1.7;
+
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Shape roles */
+  --radius-indicator: 4px;
+  --radius-control: 6px;
+  --radius-surface: 10px;
+  --radius-overlay: 14px;
+  --radius-round: 999px;
+
+  /* Daylight is the unthemed default. */
+  color-scheme: light;
+  --bg: #f3f5f9;
+  --panel: #ffffff;
+  --elev: #ffffff;
+  --line: #e9edf3;
+  --line-strong: #dde3ec;
+  /* Normal text is the default; bright adds emphasis and muted recedes. */
+  --text: #737e92;
+  --text-bright: #1b2433;
+  --text-muted: #a9b2c2;
+  --accent: #2563eb;
+  --accent-contrast: #ffffff;
+  --success: #138a52;
+  --warning: #a9760a;
+  --danger: #d23b3b;
+  --decorative: #7c3aed;
+
+  /* Shared source palette. Shiki and Pierre classify; AgentsInTheCloud owns color. */
+  --syntax-keyword: #cf222e;
+  --syntax-string: #0a3069;
+  --syntax-number: #0550ae;
+  --syntax-comment: #6e7781;
+  --syntax-function: #8250df;
+  --syntax-variable: #953800;
+  --syntax-type: #116329;
+  --syntax-literal: #0550ae;
+  --syntax-attribute: #0550ae;
+  --syntax-tag: #116329;
+  --syntax-constant: #0550ae;
+  --syntax-punctuation: var(--text-bright);
+  --shadow: 0 14px 44px rgba(20, 30, 60, .13);
+  --floating-surface-shadow: 0 14px 44px rgba(20, 30, 60, .039);
+
+  /* State colors are derived consistently for every theme. */
+  --text-faint: color-mix(in srgb, var(--text-muted) 62%, var(--bg));
+  --accent-soft: color-mix(in srgb, var(--accent) 15%, var(--panel));
+  --success-soft: color-mix(in srgb, var(--success) 15%, var(--panel));
+  --warning-soft: color-mix(in srgb, var(--warning) 15%, var(--panel));
+  --danger-soft: color-mix(in srgb, var(--danger) 15%, var(--panel));
+  --button-border: color-mix(in srgb, var(--accent) 20%, var(--line));
+  --button-hover-border: color-mix(in srgb, var(--accent) 65%, var(--text-bright));
+}
+
+/* A reusable visual title. Semantic heading level remains the owner's choice. */
+.title {
+  margin: 0;
+  color: var(--text-bright);
+  font-family: var(--font-sans);
+  font-size: var(--text-title);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: -.03em;
+}
+
+[data-theme="cappuccino"] {
+  color-scheme: dark;
+  --bg: #2b2018;
+  --panel: #312619;
+  --elev: #3a2e21;
+  --line: #46382a;
+  --line-strong: #574536;
+  --text: #c2a98f;
+  --text-bright: #f3e8db;
+  --text-muted: #8e745c;
+  --accent: #d8a373;
+  --accent-contrast: #2b2018;
+  --success: #b5c98f;
+  --warning: #e0b07a;
+  --danger: #d98b76;
+  --decorative: #c9a0dc;
+  --syntax-keyword: #f0a989;
+  --syntax-string: #d8c06f;
+  --syntax-number: #e0b07a;
+  --syntax-comment: #8e745c;
+  --syntax-function: #c9a0dc;
+  --syntax-variable: #d8a373;
+  --syntax-type: #b5c98f;
+  --syntax-literal: #e0b07a;
+  --syntax-attribute: #d8a373;
+  --syntax-tag: #b5c98f;
+  --syntax-constant: #e0b07a;
+  --syntax-punctuation: var(--text-bright);
+  --shadow: 0 22px 56px rgba(0, 0, 0, .45);
+  --floating-surface-shadow: 0 22px 56px rgba(0, 0, 0, .135);
+}
+
+[data-theme="tokyo-night"] {
+  color-scheme: dark;
+  --bg: #1a1b26;
+  --panel: #1e1f2e;
+  --elev: #24283b;
+  --line: #2a2e42;
+  --line-strong: #3b4261;
+  --text: #9aa5ce;
+  --text-bright: #c0caf5;
+  --text-muted: #565f89;
+  --accent: #7aa2f7;
+  --accent-contrast: #1a1b26;
+  --success: #9ece6a;
+  --warning: #e0af68;
+  --danger: #f7768e;
+  --decorative: #bb9af7;
+  --syntax-keyword: #bb9af7;
+  --syntax-string: #9ece6a;
+  --syntax-number: #ff9e64;
+  --syntax-comment: #565f89;
+  --syntax-function: #7aa2f7;
+  --syntax-variable: #e0af68;
+  --syntax-type: #2ac3de;
+  --syntax-literal: #ff9e64;
+  --syntax-attribute: #7dcfff;
+  --syntax-tag: #7aa2f7;
+  --syntax-constant: #ff9e64;
+  --syntax-punctuation: var(--text-bright);
+  --shadow: 0 22px 56px rgba(0, 0, 0, .5);
+  --floating-surface-shadow: 0 22px 56px rgba(0, 0, 0, .15);
+}
+
+[data-theme="midnight"] {
+  color-scheme: dark;
+  --bg: #0d1117;
+  --panel: #12171e;
+  --elev: #1c2128;
+  --line: #222a33;
+  --line-strong: #363c46;
+  --text: #8b949e;
+  --text-bright: #e6edf3;
+  --text-muted: #6e7681;
+  --accent: #58a6ff;
+  --accent-contrast: #0d1117;
+  --success: #3fb950;
+  --warning: #d29922;
+  --danger: #f85149;
+  --decorative: #bc8cff;
+  --syntax-keyword: #ff7b72;
+  --syntax-string: #a5d6ff;
+  --syntax-number: #79c0ff;
+  --syntax-comment: #8b949e;
+  --syntax-function: #d2a8ff;
+  --syntax-variable: #ffa657;
+  --syntax-type: #7ee787;
+  --syntax-literal: #79c0ff;
+  --syntax-attribute: #79c0ff;
+  --syntax-tag: #7ee787;
+  --syntax-constant: #79c0ff;
+  --syntax-punctuation: var(--text-bright);
+  --shadow: 0 22px 56px rgba(0, 0, 0, .6);
+  --floating-surface-shadow: 0 22px 56px rgba(0, 0, 0, .18);
+}
+
+[data-theme="nord"] {
+  color-scheme: dark;
+  --bg: #2e3440;
+  --panel: #333a47;
+  --elev: #3b4252;
+  --line: #414a5b;
+  --line-strong: #4c566a;
+  --text: #c4ccd9;
+  --text-bright: #eceff4;
+  --text-muted: #7b889e;
+  --accent: #88c0d0;
+  --accent-contrast: #2e3440;
+  --success: #a3be8c;
+  --warning: #ebcb8b;
+  --danger: #bf616a;
+  --decorative: #b48ead;
+  --syntax-keyword: #81a1c1;
+  --syntax-string: #a3be8c;
+  --syntax-number: #b48ead;
+  --syntax-comment: #7b889e;
+  --syntax-function: #88c0d0;
+  --syntax-variable: #d08770;
+  --syntax-type: #8fbcbb;
+  --syntax-literal: #b48ead;
+  --syntax-attribute: #88c0d0;
+  --syntax-tag: #81a1c1;
+  --syntax-constant: #b48ead;
+  --syntax-punctuation: var(--text-bright);
+  --shadow: 0 22px 56px rgba(0, 0, 0, .45);
+  --floating-surface-shadow: 0 22px 56px rgba(0, 0, 0, .135);
+}
+
+/* Shiki fragments emit stable role classes so existing markup recolors instantly. */
+.syntax-keyword { color: var(--syntax-keyword); }
+.syntax-string, .syntax-string-expression { color: var(--syntax-string); }
+.syntax-number { color: var(--syntax-number); }
+.syntax-comment { color: var(--syntax-comment); }
+.syntax-function { color: var(--syntax-function); }
+.syntax-variable, .syntax-parameter { color: var(--syntax-variable); }
+.syntax-type { color: var(--syntax-type); }
+.syntax-literal { color: var(--syntax-literal); }
+.syntax-attribute, .syntax-link { color: var(--syntax-attribute); }
+.syntax-tag { color: var(--syntax-tag); }
+.syntax-constant { color: var(--syntax-constant); }
+.syntax-punctuation { color: var(--syntax-punctuation); }
+
+/* Shared bridge into Pierre's Shadow DOM diff surfaces. */
+.agents-in-the-cloud-pierre-host,
+.agents-in-the-cloud-pierre-host diffs-container { display: block; min-width: 0; }
+.agents-in-the-cloud-pierre-host diffs-container {
+  --diffs-font-family: var(--font-mono);
+  --diffs-font-size: var(--text-code);
+  --diffs-line-height: calc(var(--text-code) * var(--leading-standard));
+  --diffs-light-bg: var(--panel);
+  --diffs-dark-bg: var(--panel);
+  --diffs-light: var(--text-bright);
+  --diffs-dark: var(--text-bright);
+  --diffs-addition-color-override: var(--success);
+  --diffs-deletion-color-override: var(--danger);
+  --diffs-modified-color-override: var(--accent);
+  --diffs-bg-addition-override: var(--success);
+  --diffs-bg-addition-number-override: var(--success);
+  --diffs-bg-addition-emphasis-override: transparent;
+  --diffs-bg-deletion-override: var(--danger);
+  --diffs-bg-deletion-number-override: var(--danger);
+  --diffs-bg-deletion-emphasis-override: transparent;
+  --diffs-bg-context-override: color-mix(in srgb, var(--bg) 72%, #000 8%);
+  --diffs-bg-context-gutter-override: color-mix(in srgb, var(--bg) 72%, #000 8%);
+  --diffs-bg-separator-override: color-mix(in srgb, var(--bg) 82%, #000 6%);
+  --diffs-fg-number-override: var(--text-muted);
+  --diffs-bg-hover-override: var(--accent-soft);
+  --diffs-bg-selection-override: var(--accent-soft);
+  color-scheme: dark;
+}
+
+/* Scrollable design-system surfaces use the active theme instead of browser chrome. */
+* { scrollbar-color: var(--line-strong) transparent; scrollbar-width: thin; }
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: var(--radius-round); border: 2px solid transparent; background-clip: padding-box; }
+*::-webkit-scrollbar-thumb:hover { background-color: var(--text-muted); }
+
+/* Shared layout modules own spacing where independently implemented surfaces align. */
+.work-view-toolbar {
+  min-height: 38px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+.form-stack { display: grid; gap: 16px; }
+.form-section { display: grid; gap: 8px; }
+.form-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.empty-state { min-height: 100%; display: grid; place-content: center; padding: 24px; color: var(--text); text-align: center; }
+.viewport-overlay { max-width: calc(100vw - 32px); max-height: calc(100vh - 32px); }
+@media (max-width: 700px), (pointer: coarse) {
+  .viewport-overlay { max-width: calc(100vw - 16px); max-height: calc(100vh - 16px); }
+}
+
+/* Composition modules own the space between independently rendered items. */
+.action-list { display: grid; gap: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .text-field,
+  .textarea { transition-duration: 1ms; }
+  .activity-spinner,
+  .status-dot.running,
+  .status-list__item[aria-busy="true"] .status-list__marker { animation: none !important; }
+}
+
+::selection { color: var(--text-bright); background: color-mix(in srgb, var(--accent) 32%, transparent); }
+:focus-visible { outline-color: var(--accent); }
+
+/* Native disclosure semantics, with intrinsic-height motion where supported. */
+@supports (interpolate-size: allow-keywords) {
+  @media (prefers-reduced-motion: no-preference) {
+    details::details-content {
+      interpolate-size: allow-keywords;
+      block-size: 0; overflow: clip; opacity: 0;
+      transition: block-size var(--motion-enter) var(--motion-ease-out), opacity var(--motion-exit) ease-out, content-visibility var(--motion-enter) allow-discrete;
+    }
+    details[open]::details-content { block-size: auto; opacity: 1; }
+  }
+}
+
+/* Shared entrance for brief feedback, suggestions and warnings. */
+@keyframes motion-reveal {
+  from { opacity: 0; translate: 0 4px; }
+  to { opacity: 1; translate: 0 0; }
+}
