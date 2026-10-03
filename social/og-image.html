@@ -1,0 +1,20 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  @font-face { font-family: 'Raleway'; font-weight: 100 900; src: url(../assets/fonts/raleway.woff2) format('woff2'); }
+  html, body { margin: 0; }
+  .banner { width: 1200px; height: 630px; position: relative; overflow: hidden; font-family: 'Raleway', sans-serif; color: #342d26;
+    background: radial-gradient(ellipse at 50% 60%, #fffaf1b0, transparent 70%), #eadcc6; }
+  /* name with robots standing in for the A and the T; their feet dip just below the baseline */
+  h1 { position: absolute; top: 22px; left: 0; right: 0; margin: 0; display: flex; justify-content: center; align-items: baseline;
+    font-size: 84px; font-weight: 650; letter-spacing: -.045em; line-height: 1; font-variant-numeric: lining-nums; }
+  h1 img { position: relative; top: .1em; }
+  h1 .a { height: 1.37em; margin-right: -.02em; }
+  h1 .t { height: 1.47em; margin: 0 -.42em 0 -.44em; z-index: 1; }
+  /* artwork is 1536x1024 with the cloud at (73,54)-(1475,871); scale so the cloud is ~750px wide */
+  .art { position: absolute; width: 820px; left: calc(50% - 410px); top: 150px; }
+</style></head>
+<body><div class="banner">
+  <h1><img class="a" src="robot-a.png" alt="A">gentsIn<img class="t" src="robot-t.png" alt="T">heCloud</h1>
+  <img class="art" src="../assets/agents-in-the-cloud.webp" alt="">
+</div></body></html>
