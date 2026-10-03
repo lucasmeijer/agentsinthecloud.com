@@ -94,7 +94,6 @@
     .copy { margin-top: 12px; border: 0; border-radius: 10px; padding: 9px 16px; background: #f0a960; color: var(--ink); font: 650 14px var(--font-sans); cursor: pointer; box-shadow: 0 3px 0 #b66f2c; }
     .copy:active { transform: translateY(2px); box-shadow: 0 1px 0 #b66f2c; }
     .small { font-size: 13px; color: var(--color-accent); }
-    .switch { margin-top: 2.2rem; background: none; border: 0; color: var(--color-accent); font: 600 1rem var(--font-sans); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
     @media (max-width: 760px) { .steps { grid-template-columns: 1fr; gap: 34px; } .step:nth-child(n) { transform: none; } }
     @media (prefers-reduced-motion: reduce) { .beam-dash, .blink, .blink2, .glow, .spin, .scroll-hint span::after { animation: none; } }
   </style>
@@ -318,9 +317,9 @@
 
     <!-- layers, filled in by story.js -->
     <g id="layer-closet"></g>
-    <g id="layer-beams"></g>
     <g id="layer-laptop"></g>
     <g id="layer-cloud"></g>
+    <g id="layer-beams"></g> <!-- above the cloud: the wires plug into an environment -->
     <g id="layer-fly"></g>
     <g id="layer-logos"></g>
     <g id="layer-badges"></g>
@@ -365,7 +364,6 @@
       <a class="small" href="https://github.com/lucasmeijer/atelier/blob/rename-agents-in-the-cloud/scripts/install.sh" target="_blank" rel="noopener">Read the installer first ↗</a>
     </li>
   </ol>
-  <button class="switch" type="button"><span data-for="mac">Rather on a server?</span><span data-for="server">Rather on your Mac?</span></button>
 </section>
 
 <script src="/vendor/gsap.min.js"></script>

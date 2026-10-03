@@ -59,7 +59,8 @@
     scr: { cx: 320, cy: 200, s: 1 }, // zoom inside the Mac's screen: screen point shown at its centre
     typed: { n: 0 },
     shell: { n: 0 },
-    prompt: { i: 1, n: 0 }, // opening sentence baseline + scale
+    prompt: { i: 1, n: 0 },
+    focus: { i: 0 }, // which environment the wires plug into // opening sentence baseline + scale
     beams: { o: 0 },
     envs: TASKS.map(() => ({ ...ENV_SINGLE, o: 0 })),
   };
@@ -222,7 +223,12 @@
     el('text', { x: 41, y: 37, 'font-size': 11, fill: DK.text, class: 'sans', 'font-weight': 600 }, tabLoaded, 'AgentsInTheCloud');
     el('rect', { x: 0, y: 44, width: 640, height: 32, fill: DK.tab }, g);
     el('path', { d: 'M16 60 l6 -5 M16 60 l6 5 M16 60 h12 M48 60 l-6 -5 M48 60 l-6 5 M48 60 h-12', stroke: DK.dim, 'stroke-width': 1.6, fill: 'none', 'stroke-linecap': 'round' }, g);
-    el('rect', { x: 62, y: 49, width: 566, height: 23, rx: 11.5, fill: DK.chrome, stroke: DK.accent, 'stroke-width': 1.5 }, g);
+    el('rect', { x: 62, y: 49, width: 372, height: 23, rx: 11.5, fill: DK.chrome, stroke: DK.accent, 'stroke-width': 1.5 }, g);
+    // toolbar icons right of the address bar: downloads, extensions, profile, menu
+    el('path', { d: 'M454 54 v9 m-4 -4 l4 4 l4 -4 M449 66 h10', stroke: DK.dim, 'stroke-width': 1.5, fill: 'none', 'stroke-linecap': 'round' }, g);
+    el('rect', { x: 472, y: 54, width: 11, height: 12, rx: 2.5, fill: 'none', stroke: DK.dim, 'stroke-width': 1.5 }, g);
+    el('circle', { cx: 502, cy: 60.5, r: 7, fill: DK.accent }, g);
+    [55, 60.5, 66].forEach((cy) => el('circle', { cx: 624, cy, r: 1.3, fill: DK.dim }, g));
     el('path', { d: 'M76 57 v-2 a3.5 3.5 0 0 1 7 0 v2 M74.5 57 h10 v7 h-10 Z', fill: 'none', stroke: DK.dim, 'stroke-width': 1.4 }, g);
     urlText = el('text', { x: 92, y: 66, 'font-size': 15, fill: DK.text, class: 'sans', 'font-weight': 600, 'letter-spacing': '-0.2' }, g, '');
     urlCaret = el('rect', { x: 92, y: 53, width: 1.6, height: 16, fill: DK.text, class: 'blink' }, g);
@@ -242,15 +248,7 @@
     WORK.forEach((lines, i) => {
       const g = el('g', { opacity: 0 }, page);
       el('rect', { x: 140, y: 96, width: 500, height: 304, fill: '#1f1b18' }, g);
-      const t = el('g', { class: 'mono', 'font-size': 14, fill: '#e9e1d6' }, g);
-      el('text', { x: 158, y: 128 }, t, '').innerHTML = `<tspan fill="#8f8478">&gt;</tspan> ${PROMPTS[i + 1]}`;
-      g.lines = lines.map(([dot, txt], k) => {
-        const line = el('text', { x: 158, y: 164 + k * 30, opacity: 0 }, t);
-        line.innerHTML = dot === '⎿' ? `<tspan fill="#8f8478">  ⎿ </tspan><tspan fill="#7fc27a">${txt}</tspan>`
-          : dot === '✻' ? `<tspan fill="#d97757">✻ </tspan><tspan fill="#d97757" font-style="italic">${txt}</tspan>`
-          : `<tspan fill="#d97757">● </tspan>${txt}`;
-        return line;
-      });
+      g.lines = drawWork(g, i, { x: 158, y: 128, size: 14, gap: 30 });
       claudePanes.push(g);
     });
     el('path', { d: 'M140 76 V400', stroke: DK.line, 'stroke-width': 2 }, page);
@@ -304,6 +302,20 @@
   const env1Wins = [...envNodes[0].querySelectorAll('use.win')];
   gsap.set(env1Wins, { opacity: 0 });
 
+  // Claude Code after a launch: the prompt, then lines that the timeline reveals one by one.
+  // Used for both the browser's Claude Code pane and the matching window in the cloud.
+  function drawWork(parent, i, { x, y, size, gap }) {
+    const t = el('g', { class: 'mono', 'font-size': size, fill: '#e9e1d6' }, parent);
+    el('text', { x, y }, t).innerHTML = `<tspan fill="#8f8478">&gt;</tspan> ${PROMPTS[i + 1]}`;
+    return WORK[i].map(([dot, txt], k) => {
+      const line = el('text', { x, y: y + gap * (k + 1.2), opacity: 0 }, t);
+      line.innerHTML = dot === '⎿' ? `<tspan fill="#8f8478">  ⎿ </tspan><tspan fill="#7fc27a">${txt}</tspan>`
+        : dot === '✻' ? `<tspan fill="#d97757">✻ </tspan><tspan fill="#d97757" font-style="italic">${txt}</tspan>`
+        : `<tspan fill="#d97757">● </tspan>${txt}`;
+      return line;
+    });
+  }
+
   function makeEnv(label, i, parent) {
     const g = el('g', { opacity: 0 }, parent);
     el('rect', { x: 5, y: 7, width: 240, height: 170, rx: 14, fill: INK, opacity: 0.2 }, g);
@@ -313,6 +325,12 @@
     APPS.forEach((a, j) => {
       const [x, y] = ENV_WIN[j];
       use('#w-' + a, x, y, 105, 65, g, { class: 'win' });
+      if (a === 'claude' && i > 0) {
+        // this environment's Claude Code got a launch prompt: mirror what the browser shows
+        const win = el('svg', { x, y, width: 105, height: 65, viewBox: '0 0 520 320' }, g);
+        el('rect', { x: 3, y: 27, width: 514, height: 290, fill: '#1f1b18' }, win);
+        g.lines = drawWork(win, i - 1, { x: 22, y: 70, size: 24, gap: 38 });
+      }
       use('#icon-' + a, x + 105 - 27, y + 65 - 27, 24, 24, g, { class: 'win' }); // app badge
     });
     g.ring = el('rect', { x: -6, y: -6, width: 252, height: 182, rx: 19, fill: 'none', stroke: '#f0a960', 'stroke-width': 7, opacity: 0 }, g);
@@ -484,6 +502,13 @@
   const place = (node, p) => { node.setAttribute('transform', `translate(${p.x} ${p.y}) scale(${p.s})` + (p.r ? ` rotate(${p.r})` : '')); node.setAttribute('opacity', p.o); };
   const local = (p, x, y) => ({ x: p.x + p.s * x, y: p.y + p.s * y });
   let typedShown = -1, promptShown = '', shellShown = -1;
+  // where the wires plug in: the left edge of the focused environment (fractional = mid-swing between two)
+  function envAnchor(f, ay) {
+    const i0 = Math.floor(f), i1 = Math.min(i0 + 1, P.envs.length - 1), t = f - i0;
+    const at = (i) => { const e = P.envs[i]; return local(P.cloud, e.x - 2 * e.s, e.y + ay * e.s); };
+    const a = at(i0), b = at(i1);
+    return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+  }
   function render(time) {
     const sn = Math.round(P.shell.n);
     if (sn !== shellShown) {
@@ -514,7 +539,7 @@
     if (P.beams.o > 0.001) {
       beamPaths.forEach((b, k) => {
         const a = local(P.laptop, 650, 140 + k * 40);
-        const c = local(P.cloud, 92, 360 + k * 50);
+        const c = envAnchor(P.focus.i, 72 + k * 30);
         const d = Math.max(60, Math.abs(c.x - a.x) * 0.5);
         const path = `M${a.x} ${a.y} C${a.x + d} ${a.y} ${c.x - d} ${c.y} ${c.x} ${c.y}`;
         b.soft.setAttribute('d', path); b.dash.setAttribute('d', path);
@@ -597,7 +622,7 @@
   tl.set(appNames, { opacity: 0 }, 9.6); tl.set(appNames[1], { opacity: 1 }, 9.6); // Chrome
   tl.fromTo(atelier, { opacity: 0, scale: 0.85, transformOrigin: '50% 60%' }, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.4)' }, 9.6);
   // zoom into the address bar, type the URL, then the page loads and we zoom back out
-  tl.to(P.scr, { cx: 190, cy: 70, s: 2.6, duration: 0.9, ease: 'power2.inOut' }, 10.0);
+  tl.to(P.scr, { cx: 320 / 1.42, cy: 200 / 1.42, s: 1.42, duration: 0.9, ease: 'power2.inOut' }, 10.0); // top-left anchored: browser's left edge + whole address bar
   tl.to(P.typed, { n: TYPED_URL.length, duration: 1.1, ease: 'none' }, 10.9);
   // enter: a short spinner while the page loads (everything here stays before 13, where scene 4's shift starts)
   tl.set(urlCaret, { opacity: 0 }, 12.0);
@@ -629,9 +654,10 @@
     tl.fromTo(P.envs[i], { ...slot, o: 0 }, { ...slot, o: 1, duration: 0.4, ease: 'power2.out' }, at + 1.7);
     tl.fromTo(rows[i], { opacity: 0 }, { opacity: 1, duration: 0.3 }, at + 1.7);
     tl.to(activeRow, { attr: { y: 102 + i * 27 }, duration: 0.25 }, at + 1.75);
+    tl.to(P.focus, { i, duration: 0.25, ease: 'power3.inOut' }, at + 1.75); // wires jump to the new environment
     tl.to(claudePanes[i - 1], { opacity: 0, duration: 0.15 }, at + 1.75);
     tl.to(claudePanes[i], { opacity: 1, duration: 0.15 }, at + 1.75);
-    claudePanes[i].lines.forEach((ln, k) => tl.to(ln, { opacity: 1, duration: 0.1 }, at + 1.95 + k * 0.17));
+    claudePanes[i].lines.forEach((ln, k) => tl.to([ln, envNodes[i].lines[k]], { opacity: 1, duration: 0.1 }, at + 1.95 + k * 0.17));
     blink(rows[i].ring, at + 1.8);
     if (i === 3) { tl.set(rows[1].spinner, { opacity: 0 }, at + 1.8); tl.set(rows[1].done, { opacity: 1 }, at + 1.8); } // dark-mode finishes
     blink(envNodes[i].ring, at + 1.8);
@@ -783,7 +809,6 @@
     revealSteps(0.45);
     window.scrollTo({ top: next.getBoundingClientRect().top + window.scrollY, behavior: 'smooth' });
   }
-  $('#next .switch').addEventListener('click', () => choose(next.dataset.kind === 'mac' ? 'server' : 'mac'));
   $('#next .copy').addEventListener('click', async (e) => {
     const btn = e.currentTarget;
     const code = next.querySelector('.cmd code').textContent;
