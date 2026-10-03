@@ -50,9 +50,8 @@
     .scroll-hint span { display: block; width: 1.4rem; height: 2.2rem; border: 2px solid currentColor; border-radius: 1rem; position: relative; }
     .scroll-hint span::after { content: ""; position: absolute; left: 50%; top: .4rem; width: 4px; height: 6px; margin-left: -2px; border-radius: 2px; background: currentColor; animation: wheel 1.6s ease-in-out infinite; }
     @keyframes wheel { 0% { transform: translateY(0); opacity: 1 } 80% { transform: translateY(.7rem); opacity: 0 } 100% { opacity: 0 } }
-    .progress { position: absolute; right: clamp(.6rem, 1.6vw, 1.4rem); top: 50%; transform: translateY(-50%); display: grid; gap: .55rem; z-index: 2; }
-    .progress i { display: block; width: 7px; height: 7px; border-radius: 50%; background: #955d2d33; transition: background .3s, transform .3s; }
-    .progress i.on { background: var(--color-accent); transform: scale(1.35); }
+    .progress { position: absolute; right: clamp(.8rem, 2vw, 1.6rem); top: 50%; transform: translateY(-50%); height: min(52vh, 24rem); width: 3px; border-radius: 2px; background: #955d2d26; z-index: 2; }
+    .progress b { position: absolute; left: 0; top: 0; width: 100%; border-radius: 2px; background: var(--color-accent); }
 
     /* svg bits */
     .mono { font-family: var(--font-mono); }
@@ -148,7 +147,7 @@
 <body>
 
 <section class="story" id="story">
-  <div class="progress" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="progress" aria-hidden="true"><b></b></div>
   <div class="scroll-hint" aria-hidden="true"><span></span>Scroll</div>
 
   <svg class="stage" id="stage" viewBox="0 225 1600 905" preserveAspectRatio="xMidYMid meet" role="img" aria-label="An animated story: coding agents move from your laptop into isolated cloud environments.">
@@ -392,10 +391,13 @@
     <h2 class="caption" data-step="1"><span data-beat="2.5">Your</span> <span class="strong" data-beat="3.4" data-arrow="chrome">browser,</span> <span class="strong" data-beat="4.0" data-arrow="ghostty">terminal</span> <span data-beat="4.4">and</span> <span class="strong" data-beat="4.6" data-arrow="vscode">VS&nbsp;Code,</span></h2>
     <h2 class="caption" data-step="2"><span class="strong" data-beat="6.4">Out of your laptop,</span> <span data-beat="7.0">and into an</span> <span class="strong" data-beat="7.5">isolated environment</span> <span data-beat="8.2">in the</span> <span class="accent" data-beat="8.5">cloud.</span></h2>
     <h2 class="caption" data-step="3"><span data-beat="13.3">Not one, but</span> <span class="accent" data-beat="17.1">many.</span> <span data-beat="19.9">A fresh environment</span> <span class="strong" data-beat="22.7">for every little task.</span></h2>
-    <h2 class="caption" data-step="4"><span data-beat="24.8">The cloud can just be</span> <span class="accent" data-beat="25.6">your own computer</span> <span class="accent" data-beat="26.8">in a closet.</span></h2>
-    <h2 class="caption" data-step="5"><span class="strong" data-beat="30.4" data-arrow="free">Free.</span> <span class="strong" data-beat="32.1" data-arrow="oss">Open&nbsp;source.</span> <span data-beat="33.7" data-arrow="any">Any model, any subscription.</span></h2>
-    <h2 class="caption" data-step="6"><span class="strong" data-beat="37.6">Get in!</span> <span class="accent" data-beat="38.2">We’re building!</span></h2>
-    <h2 class="caption" data-step="7"><span data-beat="40.9">Two ways in:</span> <span class="strong" data-beat="41.2">on your Mac,</span> <span data-beat="41.7">or on a</span> <span class="strong" data-beat="41.9">server.</span></h2>
+    <!-- the mobile beat is inserted into the timeline after the fact; its data-beat values are on the authored clock too -->
+    <h2 class="caption" data-step="4" data-scene="mobile"><span data-beat="24.9">Close your laptop.</span> <span class="strong" data-beat="26.0">Your agents keep working.</span></h2>
+    <h2 class="caption" data-step="5" data-scene="mobile"><span class="strong" data-beat="28.5">A great mobile experience</span> <span data-beat="29.3">for when you’re</span> <span class="accent" data-beat="29.7">on the go.</span></h2>
+    <h2 class="caption" data-step="6"><span data-beat="24.8">The cloud can just be</span> <span class="accent" data-beat="25.6">your own computer</span> <span class="accent" data-beat="26.8">in a closet.</span></h2>
+    <h2 class="caption" data-step="7"><span class="strong" data-beat="30.4" data-arrow="free">Free.</span> <span class="strong" data-beat="32.1" data-arrow="oss">Open&nbsp;source.</span> <span data-beat="33.7" data-arrow="any">Any model, any subscription.</span></h2>
+    <h2 class="caption" data-step="8"><span class="strong" data-beat="37.6">Get in!</span> <span class="accent" data-beat="38.2">We’re building!</span></h2>
+    <h2 class="caption" data-step="9"><span data-beat="40.9">Two ways in:</span> <span class="strong" data-beat="41.2">on your Mac,</span> <span data-beat="41.7">or on a</span> <span class="strong" data-beat="41.9">server.</span></h2>
   </div>
 </section>
 

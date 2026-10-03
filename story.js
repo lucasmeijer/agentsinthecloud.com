@@ -29,6 +29,13 @@
     D: { x: 1047, y: 458, s: 0.328 }, // closet scene is scaled .82 and its floor moved to y=905
   };
   const ENV_SINGLE = { x: 172, y: 120, s: 1.9 };
+  const PHONE = { x: 250, y: 330, s: 1 }; // phone is 260x540 in its own units
+  const PHONE_ENV = 2; // the phone opens the bump-deps environment
+  const REPLY = 'yes, push it';
+  const PHONE_TASK = 'bump-deps';
+  // what the phone shows: the rest of that session, then you answer and it carries on
+  const PHONE_WORK = [['>', 'bump deps'], ['●', 'Update(package.json)'], ['⎿', '7 packages bumped'], ['●', 'Bash(npm test)'], ['⎿', '142 passed'],
+    ['●', 'All green. Push it?'], ['you', REPLY], ['●', 'Bash(git push)'], ['✻', 'Working…']];
   const ENV_GRID_S = 0.95;
   const envSlot = (i) => ({ x: 164 + (i % 2) * (240 * ENV_GRID_S + 16), y: 120 + Math.floor(i / 2) * (170 * ENV_GRID_S + 16), s: ENV_GRID_S });
   const TASKS = ['empty-workspace', 'dark-mode', 'bump-deps', 'write-docs'];
@@ -63,6 +70,10 @@
     focus: { i: 0 }, // which environment the wires plug into // opening sentence baseline + scale
     beams: { o: 0 },
     envs: TASKS.map(() => ({ ...ENV_SINGLE, o: 0 })),
+    lid: { k: 1 }, // 1 = open, 0 = shut
+    phone: { ...PHONE, o: 0 },
+    link: { t: 0 }, // where the wires start: 0 = laptop, 1 = phone
+    reply: { n: 0 },
   };
 
   const stage = $('#stage');
@@ -170,6 +181,19 @@
   el('path', { d: 'M272 417.5 Q274 426 286 426 H354 Q366 426 368 417.5 Z', fill: '#6e8078' }, lap);
   const screenClipG = el('g', { 'clip-path': 'url(#screenClip)' }, lap);
   const screen = el('g', {}, screenClipG); // zooms inside the Mac's screen
+  // the lid (aluminium edge, bezel, screen) folds down onto the hinge at y=416
+  const lidG = el('g', {});
+  lap.insertBefore(lidG, lap.children[1]);
+  lidG.append(lap.children[2], lap.children[3]);
+  lap.append(lidG); // drawn last, so the folding lid lands on top of the base
+  lidG.append(screenClipG);
+  const lidDim = el('rect', { x: -13, y: -13, width: 666, height: 426, rx: 20, fill: '#0b0b0d', opacity: 0 }, lidG);
+  // the shut lid, seen from slightly above: its aluminium back, and the lid's top edge (now facing us) in the base's colour
+  const lidShut = el('g', { opacity: 0 }, lap);
+  lap.insertBefore(lidShut, lidG);
+  el('path', { d: 'M-62 402 H702 Q712 402 716 406 L722 411 H-82 L-76 406 Q-72 402 -62 402 Z', fill: 'url(#aluLid)', stroke: '#47514c', 'stroke-width': 2.5, 'stroke-linejoin': 'round', filter: 'url(#paint-grain)' }, lidShut);
+  el('path', { d: 'M-82 411 H722 Q728 411 727 415 L725 418 H-85 L-87 415 Q-88 411 -82 411 Z', fill: 'url(#aluBase)', stroke: '#4c5b53', 'stroke-width': 2.5, 'stroke-linejoin': 'round' }, lidShut);
+  el('path', { d: 'M-60 404.5 H700', stroke: '#fff1cf', 'stroke-width': 1.5, opacity: 0.7 }, lidShut);
 
   // wallpaper
   el('rect', { width: 640, height: 400, fill: 'url(#wallpaper)' }, screen);
@@ -283,6 +307,49 @@
     return g;
   });
 
+  /* ---------------- phone: one Claude Code session, no workspace list ---------------- */
+  const phoneG = el('g', { opacity: 0 }, L.laptop);
+  const phoneLines = [];
+  let replyText, replyHint, replyCaret, replyBubble, phoneComposerG;
+  {
+    const g = phoneG;
+    el('ellipse', { cx: 130, cy: 548, rx: 150, ry: 12, fill: INK, opacity: 0.2, filter: 'url(#soft)' }, g);
+    el('rect', { x: 0, y: 0, width: 260, height: 540, rx: 42, fill: 'url(#aluLid)', stroke: '#47514c', 'stroke-width': 2.5, filter: 'url(#paint-grain)' }, g);
+    el('rect', { x: 6, y: 6, width: 248, height: 528, rx: 37, fill: '#0b0b0d' }, g);
+    el('rect', { x: 14, y: 14, width: 232, height: 512, rx: 30, fill: DK.bg }, g);
+    el('rect', { x: 98, y: 24, width: 64, height: 18, rx: 9, fill: '#0b0b0d' }, g); // dynamic island
+    el('text', { x: 40, y: 38, 'font-size': 12, 'font-weight': 700, fill: DK.text, class: 'sans' }, g, '9:41');
+    el('rect', { x: 200, y: 29, width: 22, height: 11, rx: 3, fill: 'none', stroke: DK.text, 'stroke-width': 1.3 }, g);
+    el('rect', { x: 202, y: 31, width: 15, height: 7, rx: 1.5, fill: DK.text }, g);
+    // header: this session's task
+    el('rect', { x: 14, y: 54, width: 232, height: 50, fill: '#2a2420' }, g);
+    use('#spark', 26, 66, 22, 22, g);
+    el('text', { x: 56, y: 76, 'font-size': 15, 'font-weight': 700, fill: DK.text, class: 'mono' }, g, PHONE_TASK);
+    el('text', { x: 56, y: 93, 'font-size': 10.5, fill: DK.dim, class: 'sans', 'font-weight': 600 }, g, 'Claude Code · running');
+    el('circle', { cx: 228, cy: 79, r: 4.5, fill: '#61c554', class: 'glow' }, g);
+    // the session
+    const t = el('g', { class: 'mono', 'font-size': 14.5, fill: '#e9e1d6' }, g);
+    PHONE_WORK.forEach(([dot, txt], k) => {
+      const y = 136 + k * 36;
+      const line = el('text', { x: 28, y, opacity: k === 0 ? 1 : 0 }, t);
+      line.innerHTML = dot === '>' ? `<tspan fill="#8f8478">&gt;</tspan> ${txt}`
+        : dot === '⎿' ? `<tspan fill="#8f8478">  ⎿ </tspan><tspan fill="#7fc27a">${txt}</tspan>`
+        : dot === '✻' ? `<tspan fill="#d97757">✻ </tspan><tspan fill="#d97757" font-style="italic">${txt}</tspan>`
+        : dot === 'you' ? `<tspan fill="#8f8478">&gt;</tspan> <tspan fill="#f0c890">${txt}</tspan>`
+        : `<tspan fill="#d97757">● </tspan>${txt}`;
+      phoneLines.push(line);
+    });
+    // reply composer
+    phoneComposerG = el('g', {}, g);
+    el('rect', { x: 24, y: 470, width: 212, height: 40, rx: 20, fill: DK.chrome, stroke: DK.accent, 'stroke-width': 1.5 }, phoneComposerG);
+    replyHint = el('text', { x: 38, y: 495, 'font-size': 12.5, fill: '#7d7266', class: 'sans' }, phoneComposerG, 'Reply to Claude…');
+    replyText = el('text', { x: 38, y: 495, 'font-size': 13.5, 'font-weight': 500, fill: DK.text, class: 'sans' }, phoneComposerG, '');
+    replyCaret = el('rect', { x: 38, y: 482, width: 1.5, height: 16, fill: DK.text, class: 'blink' }, phoneComposerG);
+    replyBubble = el('g', {}, phoneComposerG);
+    el('circle', { cx: 216, cy: 490, r: 14, fill: DK.accent }, replyBubble);
+    el('path', { d: 'M216 497 V483 M210 489 L216 483 L222 489', stroke: '#1d1a17', 'stroke-width': 2.2, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, replyBubble);
+  }
+
   /* ---------------- cloud ---------------- */
   const cloudG = el('g', {}, L.cloud);
   // One continuous silhouette keeps the painted shading consistent across the lobes.
@@ -356,9 +423,6 @@
   const packets = [0, 1, 2, 3].map((i) => el('circle', { r: 7, fill: '#fffaf1', stroke: INK, 'stroke-width': 3 }, beamsG));
 
   /* ---------------- closet ---------------- */
-  const floor = el('g', { opacity: 0 }, L.closet);
-  el('rect', { x: -50, y: 905, width: 1700, height: 30, fill: '#d6c2a2' }, floor);
-  el('path', { d: 'M-50 905 H1650', stroke: INK, 'stroke-width': 3, opacity: 0.4 }, floor);
   const closetScene = el('g', { transform: 'translate(1180 905) scale(.82) translate(-1180 -965)' }, L.closet);
   const closet = el('g', { opacity: 0 }, closetScene);
   buildCloset(closet);
@@ -473,7 +537,7 @@
   };
   const place = (node, p) => { node.setAttribute('transform', `translate(${p.x} ${p.y}) scale(${p.s})` + (p.r ? ` rotate(${p.r})` : '')); node.setAttribute('opacity', p.o); };
   const local = (p, x, y) => ({ x: p.x + p.s * x, y: p.y + p.s * y });
-  let typedShown = -1, promptShown = '', shellShown = -1;
+  let typedShown = -1, promptShown = '', shellShown = -1, replyShown = -1;
   // where the wires plug in: the left edge of the focused environment (fractional = mid-swing between two)
   function envAnchor(f, ay) {
     const i0 = Math.floor(f), i1 = Math.min(i0 + 1, P.envs.length - 1), t = f - i0;
@@ -503,6 +567,21 @@
       urlCaret.setAttribute('x', 93 + (n ? urlText.getComputedTextLength() : 0));
     }
     place(lap, P.laptop);
+    // the lid rotates forward about the hinge: it foreshortens, and its top edge comes towards us (a little wider)
+    const lidA = (1 - P.lid.k) * Math.PI / 2, lidCos = Math.cos(lidA);
+    lidG.setAttribute('transform', P.lid.k === 1 ? '' : `translate(320 416) scale(${1 + 0.06 * Math.sin(lidA)} ${lidCos}) translate(-320 -416)`);
+    lidDim.setAttribute('opacity', (1 - lidCos) * 0.75);
+    const shut = gsap.utils.clamp(0, 1, (0.14 - lidCos) / 0.1); // the last few degrees: we see the lid's back instead
+    lidG.setAttribute('opacity', 1 - shut);
+    lidShut.setAttribute('opacity', shut);
+    place(phoneG, P.phone);
+    const rn = Math.round(P.reply.n);
+    if (rn !== replyShown) {
+      replyShown = rn;
+      replyText.textContent = REPLY.slice(0, rn);
+      replyHint.setAttribute('opacity', rn ? 0 : 1);
+      replyCaret.setAttribute('x', 36 + (rn ? replyText.getComputedTextLength() + 2 : 0));
+    }
     place(cloudG, P.cloud);
     place(claudeBigG, P.claudeBig);
     placeSentence();
@@ -510,7 +589,8 @@
     beamsG.setAttribute('opacity', P.beams.o);
     if (P.beams.o > 0.001) {
       beamPaths.forEach((b, k) => {
-        const a = local(P.laptop, 650, 140 + k * 40);
+        const fromLap = local(P.laptop, 650, 140 + k * 40), fromPhone = local(P.phone, 262, 230 + k * 40);
+        const a = { x: fromLap.x + (fromPhone.x - fromLap.x) * P.link.t, y: fromLap.y + (fromPhone.y - fromLap.y) * P.link.t };
         const c = envAnchor(P.focus.i, 72 + k * 30);
         const d = Math.max(60, Math.abs(c.x - a.x) * 0.5);
         const path = `M${a.x} ${a.y} C${a.x + d} ${a.y} ${c.x - d} ${c.y} ${c.x} ${c.y}`;
@@ -534,7 +614,7 @@
   // split each [data-beat] phrase into word spans that light up one after another
   const beats = [];
   document.querySelectorAll('.caption [data-beat]').forEach((ph) => {
-    const at = parseFloat(ph.dataset.beat);
+    const at = parseFloat(ph.dataset.beat), cap = ph.closest('.caption'), late = cap.dataset.scene === 'mobile';
     const color = ph.classList.contains('accent') ? '#955d2d' : '#342d26';
     const parts = ph.textContent.split(/(\s+)/);
     ph.textContent = '';
@@ -543,7 +623,7 @@
       if (/^\s+$/.test(p)) { ph.append(p); return; }
       const w = document.createElement('span');
       w.className = 'kw'; w.textContent = p; ph.append(w);
-      beats.push({ w, at: at + n++ * 0.12, color });
+      beats.push({ w, at: at + n++ * 0.12, color, late, cap, ph });
     });
   });
 
@@ -636,17 +716,17 @@
   }
 
   // 5 — it's just a Mac mini in a closet
-  caption(3, 4, STEPS[4]);
-  tl.to([closet, floor], { opacity: 1, duration: 1.2 }, 24.7);
+  caption(5, 6, STEPS[4]);
+  tl.to(closet, { opacity: 1, duration: 1.2 }, 24.7);
   tl.to(P.laptop, { ...LAPTOP.D, duration: 2 }, 24.7);
   tl.fromTo(mini, { opacity: 0, scale: 0.4, transformOrigin: '50% 50%' }, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(2)' }, 25.5);
   tl.to(P.cloud, { ...CLOUD.D, duration: 2.2, ease: 'power3.inOut' }, 25.7);
   bubbles.forEach((b, i) => tl.fromTo(b, { opacity: 0, scale: 0, transformOrigin: '50% 50%' }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(3)' }, 27.5 + i * 0.2));
 
   // 6 — free, open source, any model, any subscription (each logo replaces the previous one)
-  caption(4, 5, STEPS[5]);
-  tl.to([closet, floor, mini, ...bubbles], { opacity: 0, duration: 0.8 }, 29.7);
-  tl.to([P.laptop, P.cloud, P.beams], { o: 0, duration: 0.8 }, 29.7);
+  caption(6, 7, STEPS[5]);
+  tl.to([closet, mini, ...bubbles], { opacity: 0, duration: 0.8 }, 29.7);
+  tl.to([P.laptop, P.cloud, P.beams, P.phone], { o: 0, duration: 0.8 }, 29.7);
   const pop = (t, at) => tl.fromTo(t, { autoAlpha: 0, scale: 0.4, transformOrigin: '50% 50%' }, { autoAlpha: 1, scale: 1, duration: 0.5, ease: 'back.out(2.2)' }, at);
   const unpop = (t, at) => tl.to(t, { autoAlpha: 0, scale: 0.7, duration: 0.3, ease: 'power1.in' }, at);
   const drawArrow = (k, at) => tl.to(arrowPaths[k], { attr: { 'stroke-dashoffset': 0 }, opacity: 0.85, duration: 0.5, ease: 'power2.out' }, at);
@@ -656,27 +736,70 @@
   pop(ghTile, 32.1); drawArrow('oss', 32.2);
   unpop(ghTile, 33.4); eraseArrow('oss', 33.4);
   drawArrow('any', 33.7);
-  provTiles.forEach((t, i) => pop(t, 33.7 + i * 0.12));
+  provTiles.forEach((t, i) => pop(t, 33.7 + i * 0.2));
 
   // 7 — the big logo: get in!
-  caption(5, 6, STEPS[6]);
+  caption(7, 8, STEPS[6]);
   provTiles.forEach((t) => unpop(t, 37.1));
   eraseArrow('any', 37.1);
   tl.fromTo(bigLogo, { opacity: 0, scale: 0.85, transformOrigin: '50% 60%' }, { opacity: 1, scale: 1, duration: 0.8, ease: 'back.out(1.6)' }, 37.3);
 
   // 8 — two ways in
-  caption(6, 7, STEPS[7]);
+  caption(8, 9, STEPS[7]);
   tl.to(bigLogo, { opacity: 0, scale: 0.9, duration: 0.5 }, 40.6);
   pop(choiceCards[0], 41.2);
   pop(choiceCards[1], 41.8);
 
-  beats.forEach((b) => tl.to(b.w, { color: b.color, duration: 0.3, ease: 'none' }, b.at));
+  const beat = (b) => { b.tween = gsap.to(b.w, { color: b.color, duration: 0.3, ease: 'none', paused: true }); tl.add(b.tween.paused(false), b.at); };
+  beats.filter((b) => !b.late).forEach(beat);
   // Everything above is authored on one clock; these shifts re-pace it afterwards.
   // (data-beat values in index.html are on the authored clock; ?t= is on the final one.)
   const shift = (from, by) => { tl.shiftChildren(by, false, from); STEPS.forEach((s, i) => { if (s >= from) STEPS[i] += by; }); };
-  shift(13, 3.2);   // room for zooming in and typing the URL
+
+  // re-pacing on the authored clock, latest first so earlier shifts don't move the later cut points
+  shift(40.4, -0.6); // shorter hold on the big logo
+  shift(36.9, 1.2);  // the provider logos pop in more slowly, so give them room
+
+  // 4b — inserted after "for every little task": the laptop shuts, the agents keep going, and a phone picks one up
+  const M = 24.5;
+  shift(M, 8.6);
+  STEPS.splice(4, 0, M, M + 3.6);
+  caption(3, 4, M);
+  tl.to(P.lid, { k: 0, duration: 0.9, ease: 'power2.in' }, M + 0.4);
+  tl.to(P.beams, { o: 0, duration: 0.4 }, M + 0.9);
+  [1, 2, 3].forEach((i, k) => blink(envNodes[i].ring, M + 1.4 + k * 0.45));
+  caption(4, 5, M + 3.6);
+  tl.to(P.laptop, { o: 0, y: LAPTOP.C.y + 60, duration: 0.6, ease: 'power2.in' }, M + 3.6);
+  tl.fromTo(P.phone, { y: PHONE.y + 140, o: 0 }, { y: PHONE.y, o: 1, duration: 0.8, ease: 'back.out(1.4)' }, M + 3.9);
+  tl.set(P.link, { t: 1 }, M + 4.6);
+  tl.set(P.focus, { i: PHONE_ENV }, M + 4.6);
+  tl.to(P.beams, { o: 1, duration: 0.5 }, M + 4.6);
+  blink(envNodes[PHONE_ENV].ring, M + 4.8);
+  phoneLines.slice(1, 6).forEach((ln, k) => tl.to(ln, { opacity: 1, duration: 0.15 }, M + 5.0 + k * 0.3));
+  tl.to(P.reply, { n: REPLY.length, duration: 0.7, ease: 'none' }, M + 6.6);
+  tl.fromTo(replyBubble, { scale: 1, transformOrigin: '50% 50%' }, { scale: 0.85, duration: 0.08, yoyo: true, repeat: 1 }, M + 7.35);
+  tl.set(P.reply, { n: 0 }, M + 7.5);
+  phoneLines.slice(6).forEach((ln, k) => tl.to(ln, { opacity: 1, duration: 0.15 }, M + 7.5 + k * 0.3));
+  beats.filter((b) => b.late).forEach(beat);
+  shift(13, 0.8);   // a breath after the page loads (more than this left the scene standing still)
   shift(1.6, -0.6); // less waiting after `claude` starts
   tl.to({}, { duration: 1.4 }, tl.duration()); // hold at the end
+
+  // Continuous karaoke: each phrase still starts on its beat, but its words now light up evenly until the
+  // next phrase starts (the last phrase runs until shortly before its caption leaves), so every bit of
+  // scrolling visibly moves the text forward.
+  caps.forEach((cap, ci) => {
+    const words = beats.filter((b) => b.cap === cap);
+    if (!words.length) return;
+    const phrases = [...new Set(words.map((b) => b.ph))].map((ph) => words.filter((b) => b.ph === ph));
+    const end = (ci + 1 < STEPS.length ? STEPS[ci + 1] : tl.duration() - 1.4) - 0.5;
+    phrases.forEach((ws, j) => {
+      const from = ws[0].tween.startTime();
+      const to = j + 1 < phrases.length ? phrases[j + 1][0].tween.startTime() : Math.max(end, from + ws.length * 0.15);
+      const step = (to - from) / ws.length;
+      ws.forEach((b, k) => { b.tween.startTime(from + k * step); b.tween.duration(Math.max(0.15, step)); });
+    });
+  });
 
   /* ---------------- caption placement: just under the graphics ---------------- */
   function stageGeom() {
@@ -789,22 +912,22 @@
   });
 
   /* ---------------- scroll ---------------- */
-  const dots = [...document.querySelectorAll('.progress i')];
-  const setDot = (n) => dots.forEach((d, i) => d.classList.toggle('on', i === n));
-  setDot(0);
+  // progress rail: fills continuously with the story, so every scroll visibly registers
+  const railFill = $('.progress b');
+  let railShown = -1;
+  gsap.ticker.add(() => {
+    const t = tl.time();
+    if (t === railShown) return;
+    railShown = t;
+    railFill.style.height = (100 * t) / tl.duration() + '%';
+  });
   const storyST = ScrollTrigger.create({
     trigger: '#story',
     start: 'top top',
     end: () => '+=' + Math.round(tl.duration() * window.innerHeight * 0.16),
     pin: true,
-    scrub: 0.8,
+    scrub: 0.4,
     animation: tl,
-    onUpdate: (self) => {
-      const t = self.progress * tl.duration();
-      let n = 0;
-      STEPS.forEach((s, i) => { if (t >= s - 0.2) n = i; });
-      setDot(n);
-    },
   });
 
   // Debug: ?t=12.5 jumps the story to that time (useful while iterating)
