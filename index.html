@@ -50,9 +50,8 @@
     .scroll-hint span { display: block; width: 1.4rem; height: 2.2rem; border: 2px solid currentColor; border-radius: 1rem; position: relative; }
     .scroll-hint span::after { content: ""; position: absolute; left: 50%; top: .4rem; width: 4px; height: 6px; margin-left: -2px; border-radius: 2px; background: currentColor; animation: wheel 1.6s ease-in-out infinite; }
     @keyframes wheel { 0% { transform: translateY(0); opacity: 1 } 80% { transform: translateY(.7rem); opacity: 0 } 100% { opacity: 0 } }
-    .progress { position: absolute; right: clamp(.6rem, 1.6vw, 1.4rem); top: 50%; transform: translateY(-50%); display: grid; gap: .55rem; z-index: 2; }
-    .progress i { display: block; width: 7px; height: 7px; border-radius: 50%; background: #955d2d33; transition: background .3s, transform .3s; }
-    .progress i.on { background: var(--color-accent); transform: scale(1.35); }
+    .progress { position: absolute; right: clamp(.8rem, 2vw, 1.6rem); top: 50%; transform: translateY(-50%); height: min(52vh, 24rem); width: 3px; border-radius: 2px; background: #955d2d26; z-index: 2; }
+    .progress b { position: absolute; left: 0; top: 0; width: 100%; border-radius: 2px; background: var(--color-accent); }
 
     /* svg bits */
     .mono { font-family: var(--font-mono); }
@@ -108,6 +107,38 @@
     .cmd code { display: block; color: #fff4df; font: 14px/1.7 var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
     .copy { margin-top: 12px; border: 0; border-radius: 10px; padding: 9px 16px; background: #f0a960; color: var(--ink); font: 650 14px var(--font-sans); cursor: pointer; box-shadow: 0 3px 8px #58432f33; }
     .copy:active { transform: translateY(2px); box-shadow: 0 1px 3px #58432f26; }
+
+    /* ---------- learn more: one video, more videos, FAQ ---------- */
+    .learn { padding: 2rem 16px 6rem; display: flex; flex-direction: column; align-items: center; gap: clamp(3rem, 8vh, 5rem); }
+    .learn h2 { margin: 0; font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 450; letter-spacing: -.03em; line-height: 1.1; text-align: center; text-wrap: balance; }
+    .learn h2 .strong, .learn h2 .accent { font-weight: 650; }
+    .learn h2 .accent { color: var(--color-accent); }
+    .one-video { display: flex; flex-direction: column; align-items: center; gap: clamp(1.5rem, 4vh, 2.5rem); }
+    .frame { background: #fffaf2; border: 3px solid var(--ink); border-radius: 26px; box-shadow: 0 3px 6px #58432f12, 0 18px 40px #58432f26; padding: 10px; }
+    .frame .video { border-radius: 16px; overflow: hidden; background: var(--ink); }
+    .video iframe { display: block; width: 100%; height: 100%; border: 0; }
+    .one-video .frame { width: min(100%, 340px); transform: rotate(-1.2deg); }
+    .one-video .video { aspect-ratio: 1080 / 1920; }
+    .more { width: min(100%, 72rem); text-align: center; }
+    .more > summary, .faq summary { list-style: none; cursor: pointer; }
+    .more > summary::-webkit-details-marker, .faq summary::-webkit-details-marker { display: none; }
+    .more > summary { display: flex; width: fit-content; margin: 0 auto; align-items: center; gap: 10px; border: 3px solid var(--ink); background: #f6e3c8; color: var(--ink); border-radius: 999px; padding: 10px 22px; font-size: 1.15rem; font-weight: 550; letter-spacing: -.02em; box-shadow: 0 3px 8px #58432f33; transition: transform .18s cubic-bezier(.3, 1.6, .5, 1); }
+    .more > summary:hover { transform: translateY(-3px) rotate(-1.5deg); }
+    .more > summary::after, .faq summary::after { content: "+"; font-weight: 700; color: var(--color-accent); transition: transform .2s; }
+    .more[open] > summary::after, .faq details[open] summary::after { transform: rotate(45deg); }
+    .video-grid { list-style: none; margin: 2.5rem 0 0; padding: 0; width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr)); gap: clamp(20px, 3vw, 36px); }
+    .video-grid li { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+    .video-grid li:nth-child(odd) .frame { transform: rotate(-.6deg); }
+    .video-grid li:nth-child(even) .frame { transform: rotate(.6deg); }
+    .video-grid h3 { margin: 0 6px; font-size: clamp(1.1rem, 1.6vw, 1.3rem); font-weight: 550; letter-spacing: -.02em; }
+    .video-grid .video { aspect-ratio: 16 / 9; }
+    .faq { width: min(100%, 44rem); display: flex; flex-direction: column; gap: 1.5rem; }
+    .faq-list { display: grid; gap: 14px; }
+    .faq details { background: #fffaf2; border: 3px solid var(--ink); border-radius: 20px; box-shadow: 0 3px 6px #58432f12, 0 10px 24px #58432f1f; }
+    .faq summary { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 22px; font-size: clamp(1.1rem, 1.6vw, 1.3rem); font-weight: 550; letter-spacing: -.02em; }
+    .faq summary::after { font-size: 1.5rem; line-height: 1; }
+    .faq details p a { color: var(--color-accent); font-weight: 600; text-underline-offset: 3px; }
+    .faq details p { margin: 0; padding: 0 22px 18px; font-size: clamp(1.05rem, 1.4vw, 1.15rem); font-weight: 450; letter-spacing: -.01em; line-height: 1.5; color: var(--color-text); }
     .small { font-size: 13px; color: var(--color-accent); }
     @media (max-width: 1120px) { .steps { grid-template-columns: minmax(0, 36rem); justify-content: center; gap: 34px; } }
     @media (max-width: 760px) { .step:nth-child(n) { transform: none; } }
@@ -117,7 +148,7 @@
 <body>
 
 <section class="story" id="story">
-  <div class="progress" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="progress" aria-hidden="true"><b></b></div>
   <div class="scroll-hint" aria-hidden="true"><span></span>Scroll</div>
 
   <svg class="stage" id="stage" viewBox="0 225 1600 905" preserveAspectRatio="xMidYMid meet" role="img" aria-label="An animated story: coding agents move from your laptop into isolated cloud environments.">
@@ -361,10 +392,13 @@
     <h2 class="caption" data-step="1"><span data-beat="2.5">Your</span> <span class="strong" data-beat="3.4" data-arrow="chrome">browser,</span> <span class="strong" data-beat="4.0" data-arrow="ghostty">terminal</span> <span data-beat="4.4">and</span> <span class="strong" data-beat="4.6" data-arrow="vscode">VS&nbsp;Code,</span></h2>
     <h2 class="caption" data-step="2"><span class="strong" data-beat="6.4">Out of your laptop,</span> <span data-beat="7.0">and into an</span> <span class="strong" data-beat="7.5">isolated environment</span> <span data-beat="8.2">in the</span> <span class="accent" data-beat="8.5">cloud.</span></h2>
     <h2 class="caption" data-step="3"><span data-beat="13.3">Not one, but</span> <span class="accent" data-beat="17.1">many.</span> <span data-beat="19.9">A fresh environment</span> <span class="strong" data-beat="22.7">for every little task.</span></h2>
-    <h2 class="caption" data-step="4"><span data-beat="24.8">The cloud can just be</span> <span class="accent" data-beat="25.6">your own computer</span> <span class="accent" data-beat="26.8">in a closet.</span></h2>
-    <h2 class="caption" data-step="5"><span class="strong" data-beat="30.4" data-arrow="free">Free.</span> <span class="strong" data-beat="32.1" data-arrow="oss">Open&nbsp;source.</span> <span data-beat="33.7" data-arrow="any">Any model, any subscription.</span></h2>
-    <h2 class="caption" data-step="6"><span class="strong" data-beat="37.6">Get in!</span> <span class="accent" data-beat="38.2">We’re building!</span></h2>
-    <h2 class="caption" data-step="7"><span data-beat="40.9">Two ways in:</span> <span class="strong" data-beat="41.2">on your Mac,</span> <span data-beat="41.7">or on a</span> <span class="strong" data-beat="41.9">server.</span></h2>
+    <!-- the mobile beat is inserted into the timeline after the fact; its data-beat values are on the authored clock too -->
+    <h2 class="caption" data-step="4" data-scene="mobile"><span data-beat="24.9">Close your laptop.</span> <span class="strong" data-beat="26.0">Your agents keep working.</span></h2>
+    <h2 class="caption" data-step="5" data-scene="mobile"><span class="strong" data-beat="28.5">A great mobile experience</span> <span data-beat="29.3">for when you’re</span> <span class="accent" data-beat="29.7">on the go.</span></h2>
+    <h2 class="caption" data-step="6"><span data-beat="24.8">The cloud can just be</span> <span class="accent" data-beat="25.6">your own computer</span> <span class="accent" data-beat="26.8">in a closet.</span></h2>
+    <h2 class="caption" data-step="7"><span class="strong" data-beat="30.4" data-arrow="free">Free.</span> <span class="strong" data-beat="32.1" data-arrow="oss">Open&nbsp;source.</span> <span data-beat="33.7" data-arrow="any">Any model, any subscription.</span></h2>
+    <h2 class="caption" data-step="8"><span class="strong" data-beat="37.6">Get in!</span> <span class="accent" data-beat="38.2">We’re building!</span></h2>
+    <h2 class="caption" data-step="9"><span data-beat="40.9">Two ways in:</span> <span class="strong" data-beat="41.2">on your Mac,</span> <span data-beat="41.7">or on a</span> <span class="strong" data-beat="41.9">server.</span></h2>
   </div>
 </section>
 
@@ -392,9 +426,38 @@
         <code>curl -fsSL https://agentsinthecloud.com/install.sh | bash</code>
         <button class="copy" type="button">Copy</button>
       </div>
-      <a class="small" href="https://github.com/lucasmeijer/atelier/blob/rename-agents-in-the-cloud/scripts/install.sh" target="_blank" rel="noopener">Read the installer first ↗</a>
+      <a class="small" href="https://github.com/lucasmeijer/AgentsInTheCloud/blob/rename-agents-in-the-cloud/scripts/install.sh" target="_blank" rel="noopener">Read the installer first ↗</a>
     </li>
   </ol>
+</section>
+
+<section class="learn" id="learn" aria-label="Learn more">
+  <div class="one-video">
+    <h2>If you only watch <span class="strong">one video,</span> <span class="accent">watch this short one!</span></h2>
+    <div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtrgqf7l01fh0agmatvu18vg/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="AgentsInTheCloud in under a minute" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div>
+  </div>
+  <details class="more">
+    <summary>Ten more videos</summary>
+    <ul class="video-grid">
+      <li><h3>Remote development experience</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtmxa27u00bg0agm0c3bd8sg/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Remote development experience" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
+      <li><h3>Evaluating agent work</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtmwk9k9014l0agm0lhybqop/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Evaluating agent work" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
+      <li><h3>Fire &amp; forget for mental bandwidth</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtmzsz8a000g0agm91cw4c07/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Fire &amp; forget for mental bandwidth" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
+      <li><h3>On my phone?</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtn3k1e000sv09gmerlba9rl/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="On my phone?" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
+      <li><h3>Mini quality of life features</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtn2ej0a019209gm2ds97gin/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Mini quality of life features" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
+      <li><h3>Secrets</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtn16hh401gg0agm2k3z59br/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Secrets" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
+      <li><h3>Are cloud agents a good idea for me?</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtmuv6vb000s0bgmfkq1aw6h/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Are cloud agents a good idea for me?" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
+      <li><h3>Installing AgentsInTheCloud</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtn2t2ic00g80agm1wce4yvs/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Installing AgentsInTheCloud" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
+      <li><h3>Remote development experience</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtmxa27u00bg0agm0c3bd8sg/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Remote development experience" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
+      <li><h3>Evaluating agent work</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtmwk9k9014l0agm0lhybqop/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Evaluating agent work" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
+    </ul>
+  </details>
+  <div class="faq">
+    <h2><span class="strong">Questions?</span> <span class="accent">Answers.</span></h2>
+    <div class="faq-list">
+      <details><summary>How can I send feedback?</summary><p>Tweet me at <a href="https://x.com/lucasmeijer" target="_blank" rel="noopener">@lucasmeijer</a>.</p></details>
+      <details><summary>Is there really only one question here?</summary><p>Technically 2.</p></details>
+    </div>
+  </div>
 </section>
 
 <script src="/vendor/gsap.min.js"></script>
