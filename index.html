@@ -137,6 +137,7 @@
     .faq details { background: #fffaf2; border: 3px solid var(--ink); border-radius: 20px; box-shadow: 0 3px 6px #58432f12, 0 10px 24px #58432f1f; }
     .faq summary { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 22px; font-size: clamp(1.1rem, 1.6vw, 1.3rem); font-weight: 550; letter-spacing: -.02em; }
     .faq summary::after { font-size: 1.5rem; line-height: 1; }
+    .faq details p a { color: var(--color-accent); font-weight: 600; text-underline-offset: 3px; }
     .faq details p { margin: 0; padding: 0 22px 18px; font-size: clamp(1.05rem, 1.4vw, 1.15rem); font-weight: 450; letter-spacing: -.01em; line-height: 1.5; color: var(--color-text); }
     .small { font-size: 13px; color: var(--color-accent); }
     @media (max-width: 1120px) { .steps { grid-template-columns: minmax(0, 36rem); justify-content: center; gap: 34px; } }
@@ -425,7 +426,7 @@
         <code>curl -fsSL https://agentsinthecloud.com/install.sh | bash</code>
         <button class="copy" type="button">Copy</button>
       </div>
-      <a class="small" href="https://github.com/lucasmeijer/atelier/blob/rename-agents-in-the-cloud/scripts/install.sh" target="_blank" rel="noopener">Read the installer first ↗</a>
+      <a class="small" href="https://github.com/lucasmeijer/AgentsInTheCloud/blob/rename-agents-in-the-cloud/scripts/install.sh" target="_blank" rel="noopener">Read the installer first ↗</a>
     </li>
   </ol>
 </section>
@@ -453,10 +454,8 @@
   <div class="faq">
     <h2><span class="strong">Questions?</span> <span class="accent">Answers.</span></h2>
     <div class="faq-list">
-      <details><summary>Where do the cloud agents run?</summary><p>On your own Linux computer. Rent one from Hetzner, or use an old machine you have laying around.</p></details>
-      <details><summary>How beefy should the Linux machine be?</summary><p>I use 8 CPU, 16 GB of memory, and a 320 GB disk in a data center that’s relatively close. Bigger is better, but it’s easy to scale up later.</p></details>
-      <details><summary>How do I install project dependencies?</summary><p>You can give each project its own Dockerfile. Use it to install the versions of Node, Bun, Python, native libraries, or anything else your project needs.</p></details>
-      <details><summary>Which models can I use?</summary><p>All of them. You can use your OpenAI subscription, Anthropic API key, OpenRouter, etc.</p></details>
+      <details><summary>How can I send feedback?</summary><p>Tweet me at <a href="https://x.com/lucasmeijer" target="_blank" rel="noopener">@lucasmeijer</a>.</p></details>
+      <details><summary>Is there really only one question here?</summary><p>Technically 2.</p></details>
     </div>
   </div>
 </section>
