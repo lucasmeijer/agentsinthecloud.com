@@ -162,12 +162,12 @@
   const lap = el('g', {}, L.laptop);
   el('ellipse', { cx: 320, cy: 446, rx: 410, ry: 16, fill: INK, opacity: 0.2, filter: 'url(#soft)' }, lap);
   // lid: thin aluminium edge around a black glass bezel
-  el('rect', { x: -17, y: -17, width: 674, height: 434, rx: 24, fill: 'url(#aluLid)', stroke: INK, 'stroke-width': 3.5 }, lap);
-  el('rect', { x: -13, y: -13, width: 666, height: 426, rx: 20, fill: '#0b0b0d' }, lap);
+  el('rect', { x: -17, y: -17, width: 674, height: 434, rx: 24, fill: 'url(#aluLid)', stroke: '#47514c', 'stroke-width': 2.5, filter: 'url(#paint-grain)' }, lap);
+  el('rect', { x: -13, y: -13, width: 666, height: 426, rx: 20, fill: 'url(#bezel)', stroke: '#d6d8c6', 'stroke-width': 1.5 }, lap);
   // base: thin slab with a thumb scoop in the front edge
-  el('path', { d: 'M-84 416 H724 Q730 416 728 422 L720 433 Q715 440 703 440 H-63 Q-75 440 -80 433 L-88 422 Q-90 416 -84 416 Z', fill: 'url(#aluBase)', stroke: INK, 'stroke-width': 3.5, 'stroke-linejoin': 'round' }, lap);
-  el('path', { d: 'M-82 420.5 H722', stroke: '#fff', 'stroke-width': 1.5, opacity: 0.8 }, lap);
-  el('path', { d: 'M272 417.5 Q274 426 286 426 H354 Q366 426 368 417.5 Z', fill: '#9fa0a6' }, lap);
+  el('path', { d: 'M-84 416 H724 Q730 416 728 422 L720 433 Q715 440 703 440 H-63 Q-75 440 -80 433 L-88 422 Q-90 416 -84 416 Z', fill: 'url(#aluBase)', stroke: '#4c5b53', 'stroke-width': 2.5, filter: 'url(#paint-grain)', 'stroke-linejoin': 'round' }, lap);
+  el('path', { d: 'M-82 420.5 H722', stroke: '#fff1cf', 'stroke-width': 2, opacity: 0.75 }, lap);
+  el('path', { d: 'M272 417.5 Q274 426 286 426 H354 Q366 426 368 417.5 Z', fill: '#6e8078' }, lap);
   const screenClipG = el('g', { 'clip-path': 'url(#screenClip)' }, lap);
   const screen = el('g', {}, screenClipG); // zooms inside the Mac's screen
 
@@ -285,18 +285,13 @@
 
   /* ---------------- cloud ---------------- */
   const cloudG = el('g', {}, L.cloud);
-  const CLOUD_SHAPES = [
-    ['rect', { x: 70, y: 200, width: 660, height: 310, rx: 90 }],
-    ['circle', { cx: 230, cy: 210, r: 140 }], ['circle', { cx: 420, cy: 170, r: 165 }], ['circle', { cx: 600, cy: 220, r: 145 }],
-    ['circle', { cx: 120, cy: 340, r: 100 }], ['circle', { cx: 690, cy: 350, r: 100 }],
-  ];
-  el('ellipse', { cx: 405, cy: 290, rx: 430, ry: 290, fill: '#fff4dc', opacity: 0.9, filter: 'url(#softer)' }, cloudG);
-  const outline = el('g', { fill: INK, stroke: INK, 'stroke-width': 16 }, cloudG);
-  const shadow = el('g', { fill: INK, opacity: 0.23, transform: 'translate(6 14)', filter: 'url(#soft)' }, cloudG);
-  const fill = el('g', { fill: 'url(#cloudFill)' }, cloudG);
-  CLOUD_SHAPES.forEach(([t, a]) => { el(t, a, shadow); el(t, a, outline); el(t, a, fill); });
-  shadow.remove(); cloudG.insertBefore(shadow, outline);
-  el('path', { d: 'M300 70 a150 150 0 0 1 200 -40', stroke: '#fff', 'stroke-width': 10, fill: 'none', 'stroke-linecap': 'round', opacity: 0.8 }, cloudG);
+  // One continuous silhouette keeps the painted shading consistent across the lobes.
+  const cloudShape = 'M120 510 C55 510 20 460 20 395 C-12 318 22 251 93 240 C85 151 143 80 226 77 C249 77 271 84 291 96 C319 -16 472 -36 539 85 C627 52 716 116 716 216 C807 232 838 326 789 393 C798 461 752 510 689 510 Z';
+  el('ellipse', { cx: 405, cy: 290, rx: 430, ry: 290, fill: '#ffe4ab', opacity: 0.32, filter: 'url(#softer)' }, cloudG);
+  el('path', { d: cloudShape, fill: '#62503a', opacity: 0.24, transform: 'translate(6 15)', filter: 'url(#soft)' }, cloudG);
+  el('path', { d: cloudShape, fill: 'url(#cloudFill)', stroke: '#8b765c', 'stroke-width': 12, 'stroke-linejoin': 'round' }, cloudG);
+  el('path', { d: cloudShape, fill: 'url(#cloudFill)', stroke: 'url(#cloudRim)', 'stroke-width': 8, 'stroke-linejoin': 'round', filter: 'url(#paint-grain)' }, cloudG);
+  el('path', { d: 'M305 94 C331 29 381 6 426 15 C470 19 506 44 527 79 M105 230 C104 141 175 85 242 99', stroke: '#fff7dd', 'stroke-width': 5, fill: 'none', 'stroke-linecap': 'round', opacity: 0.65 }, cloudG);
   const envsG = el('g', {}, cloudG);
   const envNodes = TASKS.map((t, i) => makeEnv(t, i, envsG));
   const env1Wins = [...envNodes[0].querySelectorAll('use.win')];
@@ -370,13 +365,17 @@
   const miniWrap = el('g', { transform: 'translate(1180 722)' }, closetScene);
   const mini = el('g', { opacity: 0 }, miniWrap);
   el('ellipse', { cx: 0, cy: 24, rx: 110, ry: 8, fill: INK, opacity: 0.35, filter: 'url(#soft)' }, mini);
-  el('rect', { x: -100, y: -26, width: 200, height: 48, rx: 16, fill: '#dcd8d1', stroke: INK, 'stroke-width': 4 }, mini);
-  el('rect', { x: -90, y: -21, width: 180, height: 7, rx: 3.5, fill: '#fff', opacity: 0.7 }, mini);
-  el('path', { d: 'M-40 8 H40', stroke: '#a59d92', 'stroke-width': 3, 'stroke-linecap': 'round' }, mini);
-  el('circle', { cx: -80, cy: 8, r: 4, fill: '#7fe08a', class: 'glow' }, mini);
-  el('circle', { cx: -80, cy: 8, r: 10, fill: '#7fe08a', opacity: 0.3, filter: 'url(#soft)' }, mini);
+  const miniBody = el('g', { filter: 'url(#paint-grain)' }, mini);
+  el('path', { d: 'M-98 -12 Q-99 -21 -85 -27 L77 -27 Q91 -26 99 -14 L99 12 Q99 24 86 25 L-84 25 Q-100 24 -100 11 Z', fill: 'url(#miniFront)', stroke: '#3e4b44', 'stroke-width': 3, 'stroke-linejoin': 'round' }, miniBody);
+  el('path', { d: 'M-97 -12 Q-96 -20 -84 -25 L77 -25 Q87 -25 96 -13 L88 1 Q84 5 75 5 L-79 5 Q-87 4 -97 -12 Z', fill: 'url(#miniTop)', stroke: '#687a6e', 'stroke-width': 1.5 }, miniBody);
+  el('path', { d: 'M-88 -20 Q-30 -24 74 -22 M-80 6 H77', stroke: '#f6e7c3', 'stroke-width': 2, opacity: 0.6, fill: 'none', 'stroke-linecap': 'round' }, miniBody);
+  el('path', { d: 'M-47 15 H24', stroke: '#354e47', 'stroke-width': 3, 'stroke-linecap': 'round' }, miniBody);
+  el('rect', { x: 48, y: 11, width: 14, height: 5, rx: 2, fill: '#2f4641' }, miniBody);
+  el('rect', { x: 69, y: 11, width: 14, height: 5, rx: 2, fill: '#2f4641' }, miniBody);
+  el('circle', { cx: -80, cy: 14, r: 3, fill: '#d4ecb3', class: 'glow' }, mini);
+  el('circle', { cx: -80, cy: 14, r: 9, fill: '#b9da8c', opacity: 0.3, filter: 'url(#soft)' }, mini);
   const bubbles = [[1170, 686, 7], [1152, 656, 11], [1130, 620, 15]].map(([cx, cy, r]) =>
-    el('circle', { cx, cy, r, fill: '#fbf3e6', stroke: INK, 'stroke-width': 3, opacity: 0 }, closetScene));
+    el('circle', { cx, cy, r, fill: 'url(#cloudFill)', stroke: '#9c896d', 'stroke-width': 2, opacity: 0 }, closetScene));
 
   function buildCloset(g) {
     el('image', { href: '/assets/workshop-closet.png', x: 800, y: 150, width: 680, height: 815, preserveAspectRatio: 'none' }, g);
