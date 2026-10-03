@@ -364,16 +364,19 @@
   buildCloset(closet);
   const miniWrap = el('g', { transform: 'translate(1180 722)' }, closetScene);
   const mini = el('g', { opacity: 0 }, miniWrap);
-  el('ellipse', { cx: 0, cy: 24, rx: 110, ry: 8, fill: INK, opacity: 0.35, filter: 'url(#soft)' }, mini);
-  const miniBody = el('g', { filter: 'url(#paint-grain)' }, mini);
-  el('path', { d: 'M-98 -12 Q-99 -21 -85 -27 L77 -27 Q91 -26 99 -14 L99 12 Q99 24 86 25 L-84 25 Q-100 24 -100 11 Z', fill: 'url(#miniFront)', stroke: '#3e4b44', 'stroke-width': 3, 'stroke-linejoin': 'round' }, miniBody);
-  el('path', { d: 'M-97 -12 Q-96 -20 -84 -25 L77 -25 Q87 -25 96 -13 L88 1 Q84 5 75 5 L-79 5 Q-87 4 -97 -12 Z', fill: 'url(#miniTop)', stroke: '#687a6e', 'stroke-width': 1.5 }, miniBody);
-  el('path', { d: 'M-88 -20 Q-30 -24 74 -22 M-80 6 H77', stroke: '#f6e7c3', 'stroke-width': 2, opacity: 0.6, fill: 'none', 'stroke-linecap': 'round' }, miniBody);
-  el('path', { d: 'M-47 15 H24', stroke: '#354e47', 'stroke-width': 3, 'stroke-linecap': 'round' }, miniBody);
-  el('rect', { x: 48, y: 11, width: 14, height: 5, rx: 2, fill: '#2f4641' }, miniBody);
-  el('rect', { x: 69, y: 11, width: 14, height: 5, rx: 2, fill: '#2f4641' }, miniBody);
-  el('circle', { cx: -80, cy: 14, r: 3, fill: '#d4ecb3', class: 'glow' }, mini);
-  el('circle', { cx: -80, cy: 14, r: 9, fill: '#b9da8c', opacity: 0.3, filter: 'url(#soft)' }, mini);
+  buildMini(mini);
+  function buildMini(mini) {
+    el('ellipse', { cx: 0, cy: 24, rx: 110, ry: 8, fill: INK, opacity: 0.35, filter: 'url(#soft)' }, mini);
+    const miniBody = el('g', { filter: 'url(#paint-grain)' }, mini);
+    el('path', { d: 'M-98 -12 Q-99 -21 -85 -27 L77 -27 Q91 -26 99 -14 L99 12 Q99 24 86 25 L-84 25 Q-100 24 -100 11 Z', fill: 'url(#miniFront)', stroke: '#3e4b44', 'stroke-width': 3, 'stroke-linejoin': 'round' }, miniBody);
+    el('path', { d: 'M-97 -12 Q-96 -20 -84 -25 L77 -25 Q87 -25 96 -13 L88 1 Q84 5 75 5 L-79 5 Q-87 4 -97 -12 Z', fill: 'url(#miniTop)', stroke: '#687a6e', 'stroke-width': 1.5 }, miniBody);
+    el('path', { d: 'M-88 -20 Q-30 -24 74 -22 M-80 6 H77', stroke: '#f6e7c3', 'stroke-width': 2, opacity: 0.6, fill: 'none', 'stroke-linecap': 'round' }, miniBody);
+    el('path', { d: 'M-47 15 H24', stroke: '#354e47', 'stroke-width': 3, 'stroke-linecap': 'round' }, miniBody);
+    el('rect', { x: 48, y: 11, width: 14, height: 5, rx: 2, fill: '#2f4641' }, miniBody);
+    el('rect', { x: 69, y: 11, width: 14, height: 5, rx: 2, fill: '#2f4641' }, miniBody);
+    el('circle', { cx: -80, cy: 14, r: 3, fill: '#d4ecb3', class: 'glow' }, mini);
+    el('circle', { cx: -80, cy: 14, r: 9, fill: '#b9da8c', opacity: 0.3, filter: 'url(#soft)' }, mini);
+  }
   const bubbles = [[1170, 686, 7], [1152, 656, 11], [1130, 620, 15]].map(([cx, cy, r]) =>
     el('circle', { cx, cy, r, fill: 'url(#cloudFill)', stroke: '#9c896d', 'stroke-width': 2, opacity: 0 }, closetScene));
 
@@ -433,27 +436,29 @@
     const inner = el('g', {}, wrap);
     const g = el('g', {}, inner);
     el('rect', { x: -197, y: -205, width: 400, height: 440, rx: 32, fill: INK, opacity: 0.23, filter: 'url(#card-shadow)' }, g);
-    el('rect', { x: -200, y: -220, width: 400, height: 440, rx: 32, fill: '#fffaf2', stroke: INK, 'stroke-width': 4 }, g);
+    el('rect', { x: -200, y: -220, width: 400, height: 440, rx: 32, fill: 'url(#choicePaper)', stroke: '#89755d', 'stroke-width': 2.5, filter: 'url(#paint-grain)' }, g);
+    el('rect', { x: -195, y: -215, width: 390, height: 430, rx: 28, fill: 'none', stroke: '#fffaf0', 'stroke-width': 2, opacity: 0.8 }, g);
     if (kind === 'mac') {
-      el('rect', { x: -122, y: -186, width: 244, height: 156, rx: 14, fill: '#0b0b0d', stroke: INK, 'stroke-width': 4 }, g);
+      el('ellipse', { cx: 0, cy: -6, rx: 153, ry: 9, fill: '#675943', opacity: 0.2, filter: 'url(#tile-shadow)' }, g);
+      el('rect', { x: -126, y: -190, width: 252, height: 164, rx: 16, fill: 'url(#aluLid)', stroke: '#47514c', 'stroke-width': 2.5, filter: 'url(#paint-grain)' }, g);
+      el('rect', { x: -122, y: -186, width: 244, height: 156, rx: 14, fill: 'url(#bezel)', stroke: '#d6d8c6', 'stroke-width': 1 }, g);
       el('rect', { x: -112, y: -176, width: 224, height: 136, rx: 5, fill: 'url(#wallpaper)' }, g);
       el('rect', { x: -70, y: -160, width: 140, height: 100, rx: 8, fill: '#1f1b18' }, g);
       use('#spark', -16, -126, 32, 32, g);
-      el('path', { d: 'M-156 -30 H156 L146 -16 Q141 -10 130 -10 H-130 Q-141 -10 -146 -16 Z', fill: 'url(#aluBase)', stroke: INK, 'stroke-width': 4, 'stroke-linejoin': 'round' }, g);
+      el('path', { d: 'M-156 -30 H156 L146 -16 Q141 -10 130 -10 H-130 Q-141 -10 -146 -16 Z', fill: 'url(#aluBase)', stroke: '#4c5b53', 'stroke-width': 2.5, 'stroke-linejoin': 'round', filter: 'url(#paint-grain)' }, g);
+      el('path', { d: 'M-147 -27 H147 M-26 -27 Q-22 -21 -16 -21 H16 Q22 -21 26 -27', stroke: '#f3ebd2', 'stroke-width': 1.5, fill: 'none', opacity: 0.8 }, g);
     } else {
-      const cl = el('g', { transform: 'translate(0 -150)' }, g);
-      const shapes = [['circle', { cx: -45, cy: 5, r: 34 }], ['circle', { cx: 5, cy: -12, r: 44 }], ['circle', { cx: 55, cy: 8, r: 30 }], ['rect', { x: -80, y: 0, width: 165, height: 40, rx: 20 }]];
-      shapes.forEach(([t, a]) => el(t, { ...a, fill: INK, stroke: INK, 'stroke-width': 8 }, cl));
-      shapes.forEach(([t, a]) => el(t, { ...a, fill: '#fffaf1' }, cl));
-      [[-6, -78, 5], [-14, -96, 7]].forEach(([cx, cy, rr]) => el('circle', { cx, cy, r: rr, fill: '#fffaf1', stroke: INK, 'stroke-width': 3 }, g));
-      el('rect', { x: -110, y: -66, width: 220, height: 56, rx: 18, fill: '#dcd8d1', stroke: INK, 'stroke-width': 4 }, g);
-      el('rect', { x: -100, y: -60, width: 200, height: 8, rx: 4, fill: '#fff', opacity: 0.7 }, g);
-      el('circle', { cx: -88, cy: -30, r: 4.5, fill: '#7fe08a', class: 'glow' }, g);
+      const cl = el('g', { transform: 'translate(-84 -203) scale(.21)' }, g);
+      el('path', { d: cloudShape, fill: '#735e45', opacity: 0.2, transform: 'translate(0 14)', filter: 'url(#soft)' }, cl);
+      el('path', { d: cloudShape, fill: 'url(#cloudFill)', stroke: '#a58f6f', 'stroke-width': 12 }, cl);
+      el('path', { d: cloudShape, fill: 'url(#cloudFill)', stroke: 'url(#cloudRim)', 'stroke-width': 7, filter: 'url(#paint-grain)' }, cl);
+      [[-6, -78, 5], [-14, -96, 7]].forEach(([cx, cy, rr]) => el('circle', { cx, cy, r: rr, fill: 'url(#cloudFill)', stroke: '#9c896d', 'stroke-width': 1.5 }, g));
+      buildMini(el('g', { transform: 'translate(0 -40) scale(1.1)' }, g));
     }
     el('text', { x: 0, y: 64, 'text-anchor': 'middle', 'font-size': 40, 'font-weight': 650, 'letter-spacing': '-1.2', fill: INK, class: 'sans' }, g, kind === 'mac' ? 'On your Mac' : 'On a server');
     el('text', { x: 0, y: 104, 'text-anchor': 'middle', 'font-size': 22, fill: '#75634f', class: 'sans' }, g, kind === 'mac' ? 'Quick and easy.' : 'Works while your laptop sleeps.');
-    el('rect', { x: -96, y: 136, width: 192, height: 54, rx: 27, fill: '#955d2d' }, g);
-    el('rect', { x: -96, y: 136, width: 192, height: 54, rx: 27, fill: 'none', stroke: '#6b3f1c', 'stroke-width': 3, transform: 'translate(0 3)', opacity: 0.6 }, g);
+    el('rect', { x: -96, y: 136, width: 192, height: 54, rx: 27, fill: 'url(#choiceButton)', stroke: '#785133', 'stroke-width': 1.5, filter: 'url(#paint-grain)' }, g);
+    el('path', { d: 'M-79 148 Q-73 141 -61 141 H61 Q73 141 79 148', fill: 'none', stroke: '#e6ba80', 'stroke-width': 1.5, 'stroke-linecap': 'round', opacity: 0.65 }, g);
     el('text', { x: 0, y: 171, 'text-anchor': 'middle', 'font-size': 23, 'font-weight': 600, fill: '#fff8ec', class: 'sans' }, g, 'Pick this →');
     iconify(g);
     g.dataset.choice = kind;
