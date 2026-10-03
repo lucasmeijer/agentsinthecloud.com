@@ -17,19 +17,25 @@
   const use = (href, x, y, w, h, parent, extra = {}) => el('use', { href, x, y, width: w, height: h, ...extra }, parent);
 
   /* ---------------- states ---------------- */
-  const LAPTOP = {
+  // Portrait screens get a taller stage: the cloud (or the closet) sits above the laptop or phone, so both can be
+  // about twice as big. The camera (P.cam) pans so the scenes that stay side by side are centred.
+  const PORTRAIT = innerWidth / innerHeight < 0.75;
+  const VB_H = PORTRAIT ? 2300 : 905, CAM = { tall: -1050, band: -420 };
+  const LAPTOP = PORTRAIT ? (() => { const at = { x: 192, y: 64, s: 1.9 }; return { A: at, B: at, C: at, D: at }; })() : {
     A: { x: 368, y: 311, s: 1.35 },   // centre stage, big
     B: { x: 110, y: 553, s: 0.8 },    // bottom-left, cloud upper-right
     C: { x: 70, y: 505, s: 0.9 },     // left half, cloud right half
     D: { x: 70, y: 518, s: 0.88 },    // left, closet on the right
   };
-  const CLOUD = {
+  const CLOUD = PORTRAIT ? { B: { x: 41, y: -950, s: 1.85 }, C: { x: 41, y: -950, s: 1.85 }, D: null } : {
     B: { x: 760, y: 300, s: 0.95 },
     C: { x: 810, y: 330, s: 0.96 },
-    D: { x: 1047, y: 458, s: 0.328 }, // closet scene is scaled .82 and its floor moved to y=905
+    D: null, // inside the closet; set once the closet is placed
   };
+  // the closet picture is 680x815 at (800,150); this puts its bottom centre at `at`, scaled by `k`
+  const CLOSET = PORTRAIT ? { at: [800, -10], k: 1.2 } : { at: [1180 - 0.82 * 40, 905], k: 0.82 };
   const ENV_SINGLE = { x: 172, y: 120, s: 1.9 };
-  const PHONE = { x: 250, y: 330, s: 1 }; // phone is 260x540 in its own units
+  const PHONE = PORTRAIT ? { x: 592, y: 36, s: 1.6 } : { x: 250, y: 330, s: 1 }; // phone is 260x540 in its own units
   const PHONE_ENV = 2; // the phone opens the bump-deps environment
   const REPLY = 'yes, push it';
   const PHONE_TASK = 'bump-deps';
@@ -74,6 +80,7 @@
     phone: { ...PHONE, o: 0 },
     link: { t: 0 }, // where the wires start: 0 = laptop, 1 = phone
     reply: { n: 0 },
+    cam: { y: CAM.tall }, // portrait only: top of the visible stage
   };
 
   const stage = $('#stage');
@@ -112,6 +119,7 @@
     groq: ['Groq', 'Very fast inference.', 'https://groq.com'],
     minimax: ['MiniMax', 'MiniMax models.', 'https://www.minimax.io'],
     huggingface: ['Hugging Face', 'The home of open models.', 'https://huggingface.co'],
+    radius: ['Radius', 'Earendil’s AI gateway for Pi, with organization-level controls and analytics.', 'https://radius.earendil.com/'],
   };
   // Moves g's children into a .hov wrapper (CSS lifts it on hover) and marks g as an icon.
   function iconify(g, key) {
@@ -167,7 +175,7 @@
   const claudeBigG = el('g', {}, L.logos);
   agentTile('claude', claudeBigG);
   const CLAUDE_START = { x: orbitOrigin.x + AGENTS[0].cx * ORBIT_K, y: orbitOrigin.y + AGENTS[0].cy * ORBIT_K, s: ORBIT_K, r: AGENTS[0].r, o: 1 };
-  P.claudeBig = { ...CLAUDE_START };
+  P.claudeBig = { ...CLAUDE_START, o: 0 }; // fades in after the title
 
   /* ---------------- laptop ---------------- */
   const lap = el('g', {}, L.laptop);
@@ -423,7 +431,9 @@
   const packets = [0, 1, 2, 3].map((i) => el('circle', { r: 7, fill: '#fffaf1', stroke: INK, 'stroke-width': 3 }, beamsG));
 
   /* ---------------- closet ---------------- */
-  const closetScene = el('g', { transform: 'translate(1180 905) scale(.82) translate(-1180 -965)' }, L.closet);
+  const closetScene = el('g', { transform: `translate(${CLOSET.at[0]} ${CLOSET.at[1]}) scale(${CLOSET.k}) translate(-1140 -965)` }, L.closet);
+  // the cloud shrinks to this spot inside the closet (closet-picture coordinates), above the computer
+  CLOUD.D = { x: CLOSET.at[0] + CLOSET.k * (1017.8 - 1140), y: CLOSET.at[1] + CLOSET.k * (419.9 - 965), s: 0.4 * CLOSET.k };
   const closet = el('g', { opacity: 0 }, closetScene);
   buildCloset(closet);
   const miniWrap = el('g', { transform: 'translate(1180 722)' }, closetScene);
@@ -472,9 +482,9 @@
   // Any model, any subscription: rapid fire of providers
   const PROVIDERS = [['claude-color', 'anthropic'], ['openai', 'openai'], ['gemini-color', 'gemini'], ['mistral-color', 'mistral'], ['deepseek-color', 'deepseek'],
     ['qwen-color', 'qwen'], ['moonshot', 'kimi'], ['grok', 'xai'], ['meta-color', 'meta'], ['zhipu-color', 'zhipu'],
-    ['githubcopilot', 'copilot'], ['openrouter', 'openrouter'], ['groq', 'groq'], ['minimax-color', 'minimax'], ['huggingface-color', 'huggingface']];
+    ['githubcopilot', 'copilot'], ['openrouter', 'openrouter'], ['groq', 'groq'], ['minimax-color', 'minimax'], ['huggingface-color', 'huggingface'], ['radius', 'radius']];
   const PPOS = [[760, 420], [905, 385], [1055, 405], [1205, 372], [1350, 430], [820, 560], [970, 535], [1120, 548], [1270, 562], [1415, 590],
-    [735, 700], [885, 690], [1035, 705], [1185, 712], [1335, 720]];
+    [735, 700], [885, 690], [1035, 705], [1185, 712], [1335, 720], [1485, 708]];
   const provTiles = PROVIDERS.map(([f, key], i) => logoTile(finale, { x: PPOS[i][0], y: PPOS[i][1], size: 112, r: ((i * 37) % 19) - 9, img: `/assets/logos/${f}.svg`, key }));
   gsap.set([freeTag, ghTile, ...provTiles], { autoAlpha: 0 });
 
@@ -489,6 +499,32 @@
   gsap.set(Object.values(appTiles), { autoAlpha: 0 });
   const arrowPaths = {};
   for (const k in ARROWS) arrowPaths[k] = el('path', { pathLength: 1, 'stroke-dasharray': '1 1', 'stroke-dashoffset': 1, 'marker-end': 'url(#arrowhead)', opacity: 0 }, arrowG);
+
+  /* ---------------- title: the social banner (name with robot letters, above the robot cloud) ---------------- */
+  const TITLE_F = 110, TITLE_BASE = 402; // font size and baseline, stage units
+  const introWrap = el('g', PORTRAIT ? { transform: 'translate(800 100) scale(1.45) translate(-800 -644)' } : {}, L.badges);
+  const intro = el('g', {}, introWrap);
+  // artwork is 1536x1024 with the cloud at (73,54)-(1475,871); the cloud starts .6em under the baseline
+  const ART_K = 0.7;
+  el('image', { href: '/assets/agents-in-the-cloud.webp', x: 800 - 768 * ART_K, y: TITLE_BASE + 0.6 * TITLE_F - 54 * ART_K, width: 1536 * ART_K, height: 1024 * ART_K }, intro);
+  const titleG = el('g', { class: 'sans', 'font-size': TITLE_F, 'font-weight': 650, 'letter-spacing': -0.045 * TITLE_F, fill: '#342d26' }, intro);
+  // robots stand in for the A and the T; their feet dip .1em below the baseline (as in social/og-image.html)
+  const robotA = el('image', { href: '/social/robot-a.png', height: 1.37 * TITLE_F, width: 1.37 * TITLE_F * 179 / 210 }, titleG);
+  const tGents = el('text', { y: TITLE_BASE }, titleG, 'gentsIn');
+  const robotT = el('image', { href: '/social/robot-t.png', height: 1.47 * TITLE_F, width: 1.47 * TITLE_F * 207 / 193 }, titleG);
+  const tHe = el('text', { y: TITLE_BASE }, titleG, 'heCloud');
+  function layoutTitle() {
+    const F = TITLE_F, wA = +robotA.getAttribute('width'), wT = +robotT.getAttribute('width');
+    const wG = tGents.getComputedTextLength(), wH = tHe.getComputedTextLength();
+    const total = wA - 0.02 * F + wG - 0.44 * F + wT - 0.42 * F + wH;
+    let x = 800 - total / 2;
+    robotA.setAttribute('x', x); robotA.setAttribute('y', TITLE_BASE + 0.1 * F - 1.37 * F); x += wA - 0.02 * F;
+    tGents.setAttribute('x', x); x += wG - 0.44 * F;
+    robotT.setAttribute('x', x); robotT.setAttribute('y', TITLE_BASE + 0.1 * F - 1.47 * F); x += wT - 0.42 * F;
+    tHe.setAttribute('x', x);
+  }
+  layoutTitle();
+  document.fonts && document.fonts.ready.then(layoutTitle);
 
   // the big logo
   const bigLogo = el('g', { opacity: 0 }, L.badges);
@@ -537,11 +573,12 @@
   };
   const place = (node, p) => { node.setAttribute('transform', `translate(${p.x} ${p.y}) scale(${p.s})` + (p.r ? ` rotate(${p.r})` : '')); node.setAttribute('opacity', p.o); };
   const local = (p, x, y) => ({ x: p.x + p.s * x, y: p.y + p.s * y });
-  let typedShown = -1, promptShown = '', shellShown = -1, replyShown = -1;
-  // where the wires plug in: the left edge of the focused environment (fractional = mid-swing between two)
-  function envAnchor(f, ay) {
+  let typedShown = -1, promptShown = '', shellShown = -1, replyShown = -1, camShown = null;
+  // where the wires plug in: the left edge of the focused environment (its bottom edge in portrait);
+  // fractional = mid-swing between two
+  function envAnchor(f, off) {
     const i0 = Math.floor(f), i1 = Math.min(i0 + 1, P.envs.length - 1), t = f - i0;
-    const at = (i) => { const e = P.envs[i]; return local(P.cloud, e.x - 2 * e.s, e.y + ay * e.s); };
+    const at = (i) => { const e = P.envs[i]; return PORTRAIT ? local(P.cloud, e.x + off * e.s, e.y + 172 * e.s) : local(P.cloud, e.x - 2 * e.s, e.y + off * e.s); };
     const a = at(i0), b = at(i1);
     return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
   }
@@ -585,15 +622,18 @@
     place(cloudG, P.cloud);
     place(claudeBigG, P.claudeBig);
     placeSentence();
+    if (PORTRAIT && P.cam.y !== camShown) { camShown = P.cam.y; stage.setAttribute('viewBox', `0 ${camShown} 1600 ${VB_H}`); layout(); }
     P.envs.forEach((p, i) => place(envNodes[i], p));
     beamsG.setAttribute('opacity', P.beams.o);
     if (P.beams.o > 0.001) {
       beamPaths.forEach((b, k) => {
-        const fromLap = local(P.laptop, 650, 140 + k * 40), fromPhone = local(P.phone, 262, 230 + k * 40);
+        const fromLap = PORTRAIT ? local(P.laptop, 280 + k * 80, -17) : local(P.laptop, 650, 140 + k * 40);
+        const fromPhone = PORTRAIT ? local(P.phone, 100 + k * 60, 0) : local(P.phone, 262, 230 + k * 40);
         const a = { x: fromLap.x + (fromPhone.x - fromLap.x) * P.link.t, y: fromLap.y + (fromPhone.y - fromLap.y) * P.link.t };
-        const c = envAnchor(P.focus.i, 72 + k * 30);
-        const d = Math.max(60, Math.abs(c.x - a.x) * 0.5);
-        const path = `M${a.x} ${a.y} C${a.x + d} ${a.y} ${c.x - d} ${c.y} ${c.x} ${c.y}`;
+        const c = envAnchor(P.focus.i, PORTRAIT ? 90 + k * 60 : 72 + k * 30);
+        const d = Math.max(60, Math.abs(PORTRAIT ? c.y - a.y : c.x - a.x) * 0.5);
+        const path = PORTRAIT ? `M${a.x} ${a.y} C${a.x} ${a.y - d} ${c.x} ${c.y + d} ${c.x} ${c.y}`
+          : `M${a.x} ${a.y} C${a.x + d} ${a.y} ${c.x - d} ${c.y} ${c.x} ${c.y}`;
         b.soft.setAttribute('d', path); b.dash.setAttribute('d', path);
       });
       packets.forEach((pk, i) => {
@@ -641,7 +681,7 @@
   tl.to(orbit, { opacity: 0, duration: 0.15, ease: 'none' }, 0);
   tl.to(P.sentence, { c: 1, y: CAPTION_Y + 44, s: 50 / SENT_FONT, duration: 0.45 }, 0.02);
   tl.to(P.laptop, { o: 1, duration: 0.3 }, 0.3);
-  tl.to(P.claudeBig, { x: 786, y: 567, s: 1.4, r: 0, duration: 0.6, ease: 'power2.inOut' }, 0.02);
+  tl.to(P.claudeBig, { ...local(LAPTOP.A, 309, 190), s: 1.4 * LAPTOP.A.s / 1.35, r: 0, duration: 0.6, ease: 'power2.inOut' }, 0.02);
   tl.to(P.claudeBig, { o: 0, duration: 0.15 }, 0.55);
   tl.fromTo(lapWins[0], { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0.5);
   tl.to(P.shell, { n: SHELL_CMD.length, duration: 0.4, ease: 'none' }, 0.75);
@@ -663,6 +703,7 @@
 
   // 3 — out of the laptop, into the cloud
   caption(1, 2, STEPS[2]);
+  if (PORTRAIT) tl.to(P.cam, { y: CAM.tall, duration: 1 }, STEPS[2]); // the cloud appears above the laptop
   tl.set(lapWins, { opacity: 0 }, 6.3);
   tl.set(flyers, { opacity: 1 }, 6.3);
   tl.to(P.laptop, { ...LAPTOP.B, duration: 2.2 }, 6.4);
@@ -727,6 +768,7 @@
   caption(6, 7, STEPS[5]);
   tl.to([closet, mini, ...bubbles], { opacity: 0, duration: 0.8 }, 29.7);
   tl.to([P.laptop, P.cloud, P.beams, P.phone], { o: 0, duration: 0.8 }, 29.7);
+  if (PORTRAIT) tl.to(P.cam, { y: CAM.band, duration: 0.8 }, 29.7);
   const pop = (t, at) => tl.fromTo(t, { autoAlpha: 0, scale: 0.4, transformOrigin: '50% 50%' }, { autoAlpha: 1, scale: 1, duration: 0.5, ease: 'back.out(2.2)' }, at);
   const unpop = (t, at) => tl.to(t, { autoAlpha: 0, scale: 0.7, duration: 0.3, ease: 'power1.in' }, at);
   const drawArrow = (k, at) => tl.to(arrowPaths[k], { attr: { 'stroke-dashoffset': 0 }, opacity: 0.85, duration: 0.5, ease: 'power2.out' }, at);
@@ -783,6 +825,14 @@
   beats.filter((b) => b.late).forEach(beat);
   shift(13, 0.8);   // a breath after the page loads (more than this left the scene standing still)
   shift(1.6, -0.6); // less waiting after `claude` starts
+
+  // 0 — the title (the social banner) comes before everything; scrolling lifts it away and the opening fades in
+  const TITLE = 1.4;
+  shift(0, TITLE);
+  tl.to(intro, { opacity: 0, y: -60, duration: 0.7, ease: 'power2.in' }, 0.1);
+  if (PORTRAIT) tl.to(P.cam, { y: CAM.band, duration: 0.8 }, 0.1);
+  tl.fromTo(opening, { opacity: 0 }, { opacity: 1, duration: 0.6, ease: 'power2.out' }, 0.7);
+  tl.to(P.claudeBig, { o: 1, duration: 0.6, ease: 'power2.out' }, 0.7);
   tl.to({}, { duration: 1.4 }, tl.duration()); // hold at the end
 
   // Continuous karaoke: each phrase still starts on its beat, but its words now light up evenly until the
@@ -834,6 +884,8 @@
   // The pinned section is re-sized by ScrollTrigger after the window's resize event, so lay out
   // whenever the stage itself changes size and after every ScrollTrigger refresh.
   new ResizeObserver(layout).observe(stage);
+  // the portrait and landscape stories are built differently, so crossing over rebuilds the page
+  addEventListener('resize', () => { if ((innerWidth / innerHeight < 0.75) !== PORTRAIT) location.reload(); });
   ScrollTrigger.addEventListener('refresh', layout);
   document.fonts && document.fonts.ready.then(layout);
 
