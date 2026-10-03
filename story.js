@@ -292,7 +292,7 @@
   ];
   el('ellipse', { cx: 405, cy: 290, rx: 430, ry: 290, fill: '#fff4dc', opacity: 0.9, filter: 'url(#softer)' }, cloudG);
   const outline = el('g', { fill: INK, stroke: INK, 'stroke-width': 16 }, cloudG);
-  const shadow = el('g', { fill: INK, opacity: 0.18, transform: 'translate(10 14)' }, cloudG);
+  const shadow = el('g', { fill: INK, opacity: 0.23, transform: 'translate(6 14)', filter: 'url(#soft)' }, cloudG);
   const fill = el('g', { fill: 'url(#cloudFill)' }, cloudG);
   CLOUD_SHAPES.forEach(([t, a]) => { el(t, a, shadow); el(t, a, outline); el(t, a, fill); });
   shadow.remove(); cloudG.insertBefore(shadow, outline);
@@ -318,7 +318,7 @@
 
   function makeEnv(label, i, parent) {
     const g = el('g', { opacity: 0 }, parent);
-    el('rect', { x: 5, y: 7, width: 240, height: 170, rx: 14, fill: INK, opacity: 0.2 }, g);
+    el('rect', { x: 5, y: 7, width: 240, height: 170, rx: 14, fill: INK, opacity: 0.2, filter: 'url(#tile-shadow)' }, g);
     el('rect', { x: 0, y: 0, width: 240, height: 170, rx: 14, fill: '#fffaf2', stroke: INK, 'stroke-width': 3 }, g);
     el('circle', { cx: 14, cy: 14, r: 4, fill: '#61c554' }, g);
     el('text', { x: 24, y: 18, 'font-size': 11, 'font-weight': 700, fill: '#5d5145', class: 'mono' }, g, label);
@@ -367,7 +367,7 @@
   const closetScene = el('g', { transform: 'translate(1180 905) scale(.82) translate(-1180 -965)' }, L.closet);
   const closet = el('g', { opacity: 0 }, closetScene);
   buildCloset(closet);
-  const miniWrap = el('g', { transform: 'translate(1180 790)' }, closetScene);
+  const miniWrap = el('g', { transform: 'translate(1180 722)' }, closetScene);
   const mini = el('g', { opacity: 0 }, miniWrap);
   el('ellipse', { cx: 0, cy: 24, rx: 110, ry: 8, fill: INK, opacity: 0.35, filter: 'url(#soft)' }, mini);
   el('rect', { x: -100, y: -26, width: 200, height: 48, rx: 16, fill: '#dcd8d1', stroke: INK, 'stroke-width': 4 }, mini);
@@ -375,43 +375,11 @@
   el('path', { d: 'M-40 8 H40', stroke: '#a59d92', 'stroke-width': 3, 'stroke-linecap': 'round' }, mini);
   el('circle', { cx: -80, cy: 8, r: 4, fill: '#7fe08a', class: 'glow' }, mini);
   el('circle', { cx: -80, cy: 8, r: 10, fill: '#7fe08a', opacity: 0.3, filter: 'url(#soft)' }, mini);
-  const bubbles = [[1170, 754, 7], [1152, 724, 11], [1130, 688, 15]].map(([cx, cy, r]) =>
+  const bubbles = [[1170, 686, 7], [1152, 656, 11], [1130, 620, 15]].map(([cx, cy, r]) =>
     el('circle', { cx, cy, r, fill: '#fbf3e6', stroke: INK, 'stroke-width': 3, opacity: 0 }, closetScene));
 
   function buildCloset(g) {
-    // frame + interior
-    el('rect', { x: 880, y: 150, width: 600, height: 815, rx: 6, fill: '#c79a68', stroke: INK, 'stroke-width': 5 }, g);
-    el('rect', { x: 906, y: 176, width: 548, height: 789, fill: 'url(#closetIn)', stroke: INK, 'stroke-width': 3 }, g);
-    // lamp + glow (like the logo's workshop lamp)
-    el('path', { d: 'M1180 176 V206', stroke: INK, 'stroke-width': 3 }, g);
-    el('path', { d: 'M1180 220 L970 965 H1390 Z', fill: 'url(#lampGlow)' }, g);
-    el('path', { d: 'M1150 226 Q1152 204 1180 204 Q1208 204 1210 226 Z', fill: '#3a332d', stroke: INK, 'stroke-width': 3 }, g);
-    el('ellipse', { cx: 1180, cy: 228, rx: 12, ry: 6, fill: '#ffe2a0' }, g);
-    // top shelf + stuff
-    el('rect', { x: 906, y: 330, width: 548, height: 16, fill: '#a7774b', stroke: INK, 'stroke-width': 3 }, g);
-    el('rect', { x: 940, y: 262, width: 120, height: 68, rx: 3, fill: '#c9955c', stroke: INK, 'stroke-width': 3 }, g);
-    el('rect', { x: 995, y: 262, width: 10, height: 68, fill: '#e6c592' }, g);
-    el('rect', { x: 1075, y: 286, width: 90, height: 44, rx: 3, fill: '#b7844f', stroke: INK, 'stroke-width': 3 }, g);
-    [['#8fb3c9', 1320, 278, 110], ['#e7c46b', 1315, 296, 120], ['#c97b6b', 1322, 313, 106]].forEach(([c, x, y, w]) =>
-      el('rect', { x, y, width: w, height: 18, rx: 8, fill: c, stroke: INK, 'stroke-width': 3 }, g));
-    // coats on hooks
-    el('path', { d: 'M930 400 q20 -20 40 0 l18 170 q-38 14 -76 0 Z', fill: '#7d8f6a', stroke: INK, 'stroke-width': 3, 'stroke-linejoin': 'round' }, g);
-    el('path', { d: 'M1424 410 q-20 -20 -40 0 l-14 150 q34 12 68 0 Z', fill: '#b5604c', stroke: INK, 'stroke-width': 3, 'stroke-linejoin': 'round' }, g);
-    // bottom shelf
-    el('rect', { x: 906, y: 812, width: 548, height: 16, fill: '#a7774b', stroke: INK, 'stroke-width': 3 }, g);
-    // router
-    el('path', { d: 'M1340 772 l-10 -40 M1400 772 l10 -40', stroke: INK, 'stroke-width': 4, 'stroke-linecap': 'round' }, g);
-    el('rect', { x: 1322, y: 770, width: 96, height: 42, rx: 9, fill: '#f2ede4', stroke: INK, 'stroke-width': 3.5 }, g);
-    [0, 1, 2].forEach((i) => el('circle', { cx: 1342 + i * 14, cy: 791, r: 3.2, fill: '#7fe08a', class: i === 1 ? 'blink2' : '' }, g));
-    el('path', { d: 'M1280 800 C1296 830 1310 830 1322 800', stroke: '#3a6ea5', 'stroke-width': 4, fill: 'none' }, g);
-    // floor stuff
-    el('path', { d: 'M950 960 q0 -26 26 -26 h18 q8 0 8 10 v16 Z M1012 960 q0 -26 26 -26 h18 q8 0 8 10 v16 Z', fill: '#5a4a3e', stroke: INK, 'stroke-width': 3 }, g);
-    el('path', { d: 'M1290 960 L1300 880 H1420 L1430 960 Z', fill: '#d8b47c', stroke: INK, 'stroke-width': 3.5, 'stroke-linejoin': 'round' }, g);
-    el('path', { d: 'M1296 906 H1424 M1293 932 H1427', stroke: '#a7824e', 'stroke-width': 3 }, g);
-    // open door
-    el('path', { d: 'M880 150 L800 182 V935 L880 965 Z', fill: '#dcb486', stroke: INK, 'stroke-width': 5, 'stroke-linejoin': 'round' }, g);
-    el('path', { d: 'M822 230 L862 214 V470 L822 482 Z M822 560 L862 552 V900 L822 910 Z', fill: 'none', stroke: '#b98d5d', 'stroke-width': 3 }, g);
-    el('circle', { cx: 816, cy: 560, r: 7, fill: '#e9c66a', stroke: INK, 'stroke-width': 2.5 }, g);
+    el('image', { href: '/assets/workshop-closet.png', x: 800, y: 150, width: 680, height: 815, preserveAspectRatio: 'none' }, g);
   }
 
   /* ---------------- finale: free / open source / any model, then the big logo and the two choices ---------------- */
@@ -421,7 +389,7 @@
     const inner = el('g', {}, wrap); // the timeline pops this
     const g = el('g', {}, inner);
     const h = size / 2, rad = size * 0.3, p = size * pad;
-    el('rect', { x: -h, y: -h + size * 0.07, width: size, height: size, rx: rad, fill: '#af89502e' }, g);
+    el('rect', { x: -h, y: -h + size * 0.07, width: size, height: size, rx: rad, fill: '#58432f33', filter: 'url(#tile-shadow)' }, g);
     el('rect', { x: -h, y: -h, width: size, height: size, rx: rad, fill: '#fff8ec', stroke: '#c6ad8a', 'stroke-width': size / 48 }, g);
     if (sym) use(sym, -h + p, -h + p, size - 2 * p, size - 2 * p, g);
     else el('image', { href: img, x: -h + p, y: -h + p, width: size - 2 * p, height: size - 2 * p }, g);
@@ -462,10 +430,10 @@
 
   // two ways in
   const choiceCards = ['mac', 'server'].map((kind, i) => {
-    const wrap = el('g', { transform: `translate(${560 + i * 480} 680)` }, L.badges);
+    const wrap = el('g', { transform: `translate(${560 + i * 480} 680) rotate(${i === 0 ? -2 : 2})` }, L.badges);
     const inner = el('g', {}, wrap);
     const g = el('g', {}, inner);
-    el('rect', { x: -192, y: -208, width: 400, height: 440, rx: 32, fill: INK, opacity: 0.18 }, g);
+    el('rect', { x: -197, y: -205, width: 400, height: 440, rx: 32, fill: INK, opacity: 0.23, filter: 'url(#card-shadow)' }, g);
     el('rect', { x: -200, y: -220, width: 400, height: 440, rx: 32, fill: '#fffaf2', stroke: INK, 'stroke-width': 4 }, g);
     if (kind === 'mac') {
       el('rect', { x: -122, y: -186, width: 244, height: 156, rx: 14, fill: '#0b0b0d', stroke: INK, 'stroke-width': 4 }, g);

@@ -60,7 +60,7 @@
     .stage .hov { transition: transform .18s cubic-bezier(.3, 1.6, .5, 1); transform-box: fill-box; transform-origin: center; }
     .stage .live:hover .hov { transform: translateY(-6px) rotate(-2deg); }
     .stage .live[data-choice]:hover .hov { transform: translateY(-10px) rotate(-1deg); }
-    .tip { position: fixed; z-index: 50; width: max-content; max-width: 250px; padding: 12px 14px 11px; border: 2px solid var(--ink); border-radius: 14px; background: #fffaf2; color: var(--color-text); font-size: 13.5px; line-height: 1.45; box-shadow: 4px 5px 0 #2b241e2e; pointer-events: none; opacity: 0; transform: translateY(6px) scale(.96) rotate(-1deg); transform-origin: var(--nub, 50%) 100%; transition: opacity .14s, transform .2s cubic-bezier(.3, 1.6, .5, 1); }
+    .tip { position: fixed; z-index: 50; width: max-content; max-width: 250px; padding: 12px 14px 11px; border: 2px solid var(--ink); border-radius: 14px; background: #fffaf2; color: var(--color-text); font-size: 13.5px; line-height: 1.45; box-shadow: 0 3px 6px #58432f12, 0 12px 28px #58432f26; pointer-events: none; opacity: 0; transform: translateY(6px) scale(.96) rotate(-1deg); transform-origin: var(--nub, 50%) 100%; transition: opacity .14s, transform .2s cubic-bezier(.3, 1.6, .5, 1); }
     .tip[data-side="bottom"] { transform-origin: var(--nub, 50%) 0; transform: translateY(-6px) scale(.96) rotate(1deg); }
     .tip.on { opacity: 1; transform: none; }
     .tip strong { display: block; font-size: 15px; font-weight: 700; letter-spacing: -.01em; margin-bottom: 2px; }
@@ -74,27 +74,28 @@
     .next[data-kind="mac"] [data-for="server"], .next[data-kind="server"] [data-for="mac"] { display: none; }
     .next-title { margin: 0; font-size: clamp(2rem, 4.4vw, 3.4rem); font-weight: 650; letter-spacing: -.045em; }
     .next-title .accent { color: var(--color-accent); }
-    .steps { list-style: none; margin: clamp(2rem, 6vh, 3.5rem) 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: clamp(18px, 3vw, 36px); width: min(100%, 72rem); align-items: stretch; }
-    .step { position: relative; background: #fffaf2; border: 3px solid var(--ink); border-radius: 26px; box-shadow: 6px 8px 0 #2b241e2e; padding: 34px 22px 24px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+    .steps { list-style: none; margin: clamp(2rem, 6vh, 3.5rem) 0 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.5fr); gap: clamp(18px, 3vw, 36px); width: min(100%, 72rem); align-items: stretch; }
+    .step { min-width: 0; position: relative; background: #fffaf2; border: 3px solid var(--ink); border-radius: 26px; box-shadow: 0 3px 6px #58432f12, 0 18px 40px #58432f26; padding: 34px 22px 24px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
     .step:nth-child(1) { transform: rotate(-1.5deg); }
     .step:nth-child(2) { transform: rotate(1deg); }
     .next[data-kind="mac"] .steps { grid-template-columns: minmax(0, 36rem); justify-content: center; }
     .next[data-kind="mac"] .step--cmd { transform: rotate(-1deg); padding-top: 28px; }
-    .why { border: 2px solid var(--ink); background: #f6e3c8; color: var(--ink); border-radius: 999px; padding: 4px 14px; font: 650 13px var(--font-sans); cursor: help; box-shadow: 0 2px 0 #2b241e40; transition: transform .18s cubic-bezier(.3, 1.6, .5, 1); }
+    .why { border: 2px solid var(--ink); background: #f6e3c8; color: var(--ink); border-radius: 999px; padding: 4px 14px; font: 650 13px var(--font-sans); cursor: help; box-shadow: 0 3px 8px #58432f26; transition: transform .18s cubic-bezier(.3, 1.6, .5, 1); }
     .why:hover { transform: translateY(-3px) rotate(-3deg); }
     .step p a { color: var(--color-accent); text-underline-offset: 3px; }
     .hicons { display: flex; gap: 12px; }
     .step p { margin: 0; font-size: clamp(1.05rem, 1.6vw, 1.3rem); font-weight: 550; letter-spacing: -.02em; line-height: 1.3; text-wrap: balance; }
     .num { position: absolute; top: -20px; left: 50%; margin-left: -20px; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--color-accent); color: #fff8ec; font-weight: 700; border: 3px solid var(--ink); }
-    .hicon { display: grid; place-items: center; width: 78px; height: 78px; border-radius: 24px; background: #fff8ec; border: 1.5px solid #c6ad8a; box-shadow: 0 4px 0 #af89502e; transition: transform .18s cubic-bezier(.3, 1.6, .5, 1); }
+    .hicon { display: grid; place-items: center; width: 78px; height: 78px; border-radius: 24px; background: #fff8ec; border: 1.5px solid #c6ad8a; box-shadow: 0 5px 12px #58432f26; transition: transform .18s cubic-bezier(.3, 1.6, .5, 1); }
     a.hicon:hover { transform: translateY(-6px) rotate(-3deg); }
     .hicon img { width: 46px; height: 46px; object-fit: contain; }
     .cmd { width: 100%; background: var(--ink); border-radius: 14px; padding: 14px; text-align: left; }
-    .cmd code { display: block; color: #fff4df; font: 14px/1.7 var(--font-mono); white-space: nowrap; overflow-x: auto; }
-    .copy { margin-top: 12px; border: 0; border-radius: 10px; padding: 9px 16px; background: #f0a960; color: var(--ink); font: 650 14px var(--font-sans); cursor: pointer; box-shadow: 0 3px 0 #b66f2c; }
-    .copy:active { transform: translateY(2px); box-shadow: 0 1px 0 #b66f2c; }
+    .cmd code { display: block; color: #fff4df; font: 14px/1.7 var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+    .copy { margin-top: 12px; border: 0; border-radius: 10px; padding: 9px 16px; background: #f0a960; color: var(--ink); font: 650 14px var(--font-sans); cursor: pointer; box-shadow: 0 3px 8px #58432f33; }
+    .copy:active { transform: translateY(2px); box-shadow: 0 1px 3px #58432f26; }
     .small { font-size: 13px; color: var(--color-accent); }
-    @media (max-width: 760px) { .steps { grid-template-columns: 1fr; gap: 34px; } .step:nth-child(n) { transform: none; } }
+    @media (max-width: 1120px) { .steps { grid-template-columns: minmax(0, 36rem); justify-content: center; gap: 34px; } }
+    @media (max-width: 760px) { .step:nth-child(n) { transform: none; } }
     @media (prefers-reduced-motion: reduce) { .beam-dash, .blink, .blink2, .glow, .spin, .scroll-hint span::after { animation: none; } }
   </style>
 </head>
@@ -106,6 +107,8 @@
 
   <svg class="stage" id="stage" viewBox="0 225 1600 905" preserveAspectRatio="xMidYMid meet" role="img" aria-label="An animated story: coding agents move from your laptop into isolated cloud environments.">
     <defs>
+      <filter id="card-shadow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="10"/></filter>
+      <filter id="tile-shadow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="5"/></filter>
       <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="14"/></filter>
       <filter id="softer" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="30"/></filter>
       <linearGradient id="wallpaper" x1="0" y1="0" x2="0.4" y2="1">
