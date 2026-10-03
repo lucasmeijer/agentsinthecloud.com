@@ -56,6 +56,12 @@
     /* svg bits */
     .mono { font-family: var(--font-mono); }
     .sans { font-family: var(--font-sans); }
+    /* Procedural turbulence on large animated SVG surfaces is very expensive on
+       high-DPI phones. Keep the shading; omit only the subtle grain on touch devices. */
+    @media (any-pointer: coarse) {
+      .stage [filter="url(#paint-grain)"] { filter: none; }
+    }
+    .stage.paused * { animation-play-state: paused !important; }
     .beam { fill: none; stroke-linecap: round; }
     .beam-dash { stroke-dasharray: 2 14; animation: flow 1.1s linear infinite; }
     .beam-dash.rev { animation-direction: reverse; }

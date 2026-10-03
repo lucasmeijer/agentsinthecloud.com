@@ -84,6 +84,11 @@
   };
 
   const stage = $('#stage');
+  let storyVisible = true;
+  new IntersectionObserver(([entry]) => {
+    storyVisible = entry.isIntersecting;
+    stage.classList.toggle('paused', !storyVisible);
+  }).observe($('#story'));
   const L = {
     closet: $('#layer-closet'), beams: $('#layer-beams'), laptop: $('#layer-laptop'), cloud: $('#layer-cloud'),
     fly: $('#layer-fly'), logos: $('#layer-logos'), badges: $('#layer-badges'),
@@ -567,11 +572,21 @@
   gsap.set(choiceCards, { autoAlpha: 0 });
 
   /* ---------------- render ---------------- */
+  // Avoid invalidating the SVG paint tree when a proxy has not changed.
+  const renderedAttrs = new WeakMap();
+  function attr(node, name, value) {
+    let cache = renderedAttrs.get(node);
+    if (!cache) { cache = {}; renderedAttrs.set(node, cache); }
+    if (cache[name] === value) return false;
+    cache[name] = value;
+    node.setAttribute(name, value);
+    return true;
+  }
   const placeSentence = () => {
-    sentence.setAttribute('transform', `translate(${800 - sentDx * P.sentence.s * P.sentence.c} ${P.sentence.y}) scale(${P.sentence.s}) translate(-800 ${-SENT_BASE})`);
-    sentence.setAttribute('opacity', P.sentence.o);
+    attr(sentence, 'transform', `translate(${800 - sentDx * P.sentence.s * P.sentence.c} ${P.sentence.y}) scale(${P.sentence.s}) translate(-800 ${-SENT_BASE})`);
+    attr(sentence, 'opacity', P.sentence.o);
   };
-  const place = (node, p) => { node.setAttribute('transform', `translate(${p.x} ${p.y}) scale(${p.s})` + (p.r ? ` rotate(${p.r})` : '')); node.setAttribute('opacity', p.o); };
+  const place = (node, p) => { attr(node, 'transform', `translate(${p.x} ${p.y}) scale(${p.s})` + (p.r ? ` rotate(${p.r})` : '')); attr(node, 'opacity', p.o); };
   const local = (p, x, y) => ({ x: p.x + p.s * x, y: p.y + p.s * y });
   let typedShown = -1, promptShown = '', shellShown = -1, replyShown = -1, camShown = null;
   // where the wires plug in: the left edge of the focused environment (its bottom edge in portrait);
@@ -582,49 +597,58 @@
     const a = at(i0), b = at(i1);
     return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
   }
+  function cubicPoint(points, t) {
+    const u = 1 - t, w = [u * u * u, 3 * u * u * t, 3 * u * t * t, t * t * t];
+    return { x: points.reduce((v, p, i) => v + w[i] * p.x, 0), y: points.reduce((v, p, i) => v + w[i] * p.y, 0) };
+  }
+  let renderedTime = -1;
   function render(time) {
+    if (document.hidden || !storyVisible) return;
+    const timelineTime = tl.time();
+    if (timelineTime === renderedTime && P.beams.o <= 0.001) return;
+    renderedTime = timelineTime;
     const sn = Math.round(P.shell.n);
     if (sn !== shellShown) {
       shellShown = sn;
       shell.prompt.innerHTML = `<tspan fill="#a58cf0">~/app</tspan> <tspan fill="#7fc27a">❯</tspan> ${SHELL_CMD.slice(0, sn)}`;
-      shell.caret.setAttribute('x', +shell.prompt.getAttribute('x') + shell.prompt.getComputedTextLength() + 2);
+      attr(shell.caret, 'x', +shell.prompt.getAttribute('x') + shell.prompt.getComputedTextLength() + 2);
     }
-    screen.setAttribute('transform', P.scr.s === 1 ? '' : `translate(320 200) scale(${P.scr.s}) translate(${-P.scr.cx} ${-P.scr.cy})`);
+    attr(screen, 'transform', P.scr.s === 1 ? '' : `translate(320 200) scale(${P.scr.s}) translate(${-P.scr.cx} ${-P.scr.cy})`);
     const pr = PROMPTS[P.prompt.i].slice(0, Math.round(P.prompt.n));
     if (pr !== promptShown) {
       promptShown = pr;
       promptText.textContent = pr;
-      promptPlaceholder.setAttribute('opacity', pr ? 0 : 1);
-      promptCaret.setAttribute('x', 149 + (pr ? promptText.getComputedTextLength() : 0));
+      attr(promptPlaceholder, 'opacity', pr ? 0 : 1);
+      attr(promptCaret, 'x', 149 + (pr ? promptText.getComputedTextLength() : 0));
     }
     const n = Math.round(P.typed.n);
     if (n !== typedShown) {
       typedShown = n;
       urlText.textContent = TYPED_URL.slice(0, n);
-      urlCaret.setAttribute('x', 93 + (n ? urlText.getComputedTextLength() : 0));
+      attr(urlCaret, 'x', 93 + (n ? urlText.getComputedTextLength() : 0));
     }
     place(lap, P.laptop);
     // the lid rotates forward about the hinge: it foreshortens, and its top edge comes towards us (a little wider)
     const lidA = (1 - P.lid.k) * Math.PI / 2, lidCos = Math.cos(lidA);
-    lidG.setAttribute('transform', P.lid.k === 1 ? '' : `translate(320 416) scale(${1 + 0.06 * Math.sin(lidA)} ${lidCos}) translate(-320 -416)`);
-    lidDim.setAttribute('opacity', (1 - lidCos) * 0.75);
+    attr(lidG, 'transform', P.lid.k === 1 ? '' : `translate(320 416) scale(${1 + 0.06 * Math.sin(lidA)} ${lidCos}) translate(-320 -416)`);
+    attr(lidDim, 'opacity', (1 - lidCos) * 0.75);
     const shut = gsap.utils.clamp(0, 1, (0.14 - lidCos) / 0.1); // the last few degrees: we see the lid's back instead
-    lidG.setAttribute('opacity', 1 - shut);
-    lidShut.setAttribute('opacity', shut);
+    attr(lidG, 'opacity', 1 - shut);
+    attr(lidShut, 'opacity', shut);
     place(phoneG, P.phone);
     const rn = Math.round(P.reply.n);
     if (rn !== replyShown) {
       replyShown = rn;
       replyText.textContent = REPLY.slice(0, rn);
-      replyHint.setAttribute('opacity', rn ? 0 : 1);
-      replyCaret.setAttribute('x', 36 + (rn ? replyText.getComputedTextLength() + 2 : 0));
+      attr(replyHint, 'opacity', rn ? 0 : 1);
+      attr(replyCaret, 'x', 36 + (rn ? replyText.getComputedTextLength() + 2 : 0));
     }
     place(cloudG, P.cloud);
     place(claudeBigG, P.claudeBig);
     placeSentence();
-    if (PORTRAIT && P.cam.y !== camShown) { camShown = P.cam.y; stage.setAttribute('viewBox', `0 ${camShown} 1600 ${VB_H}`); layout(); }
+    if (PORTRAIT && P.cam.y !== camShown) { camShown = P.cam.y; attr(stage, 'viewBox', `0 ${camShown} 1600 ${VB_H}`); placeCaptions(); }
     P.envs.forEach((p, i) => place(envNodes[i], p));
-    beamsG.setAttribute('opacity', P.beams.o);
+    attr(beamsG, 'opacity', P.beams.o);
     if (P.beams.o > 0.001) {
       beamPaths.forEach((b, k) => {
         const fromLap = PORTRAIT ? local(P.laptop, 280 + k * 80, -17) : local(P.laptop, 650, 140 + k * 40);
@@ -632,17 +656,33 @@
         const a = { x: fromLap.x + (fromPhone.x - fromLap.x) * P.link.t, y: fromLap.y + (fromPhone.y - fromLap.y) * P.link.t };
         const c = envAnchor(P.focus.i, PORTRAIT ? 90 + k * 60 : 72 + k * 30);
         const d = Math.max(60, Math.abs(PORTRAIT ? c.y - a.y : c.x - a.x) * 0.5);
-        const path = PORTRAIT ? `M${a.x} ${a.y} C${a.x} ${a.y - d} ${c.x} ${c.y + d} ${c.x} ${c.y}`
-          : `M${a.x} ${a.y} C${a.x + d} ${a.y} ${c.x - d} ${c.y} ${c.x} ${c.y}`;
-        b.soft.setAttribute('d', path); b.dash.setAttribute('d', path);
+        const controls = PORTRAIT ? [a, { x: a.x, y: a.y - d }, { x: c.x, y: c.y + d }, c]
+          : [a, { x: a.x + d, y: a.y }, { x: c.x - d, y: c.y }, c];
+        const path = `M${a.x} ${a.y} C${controls[1].x} ${controls[1].y} ${controls[2].x} ${controls[2].y} ${c.x} ${c.y}`;
+        if (attr(b.dash, 'd', path)) {
+          attr(b.soft, 'd', path);
+          b.controls = controls;
+          // A small arc-length lookup replaces synchronous SVG geometry reads.
+          b.lengths = [0];
+          let prev = a;
+          for (let j = 1; j <= 32; j++) {
+            const pt = cubicPoint(controls, j / 32);
+            b.lengths.push(b.lengths[j - 1] + Math.hypot(pt.x - prev.x, pt.y - prev.y));
+            prev = pt;
+          }
+        }
       });
       packets.forEach((pk, i) => {
-        const path = beamPaths[i % 2].dash;
-        const len = path.getTotalLength();
+        const b = beamPaths[i % 2];
         let t = (time * 0.32 + i * 0.37) % 1;
         if (i % 2) t = 1 - t;
-        const pt = path.getPointAtLength(t * len);
-        pk.setAttribute('cx', pt.x); pk.setAttribute('cy', pt.y);
+        const distance = t * b.lengths[32];
+        let j = 1;
+        while (j < 32 && b.lengths[j] < distance) j++;
+        const span = b.lengths[j] - b.lengths[j - 1];
+        const u = (j - 1 + (span ? (distance - b.lengths[j - 1]) / span : 0)) / 32;
+        const pt = cubicPoint(b.controls, u);
+        attr(pk, 'cx', pt.x); attr(pk, 'cy', pt.y);
       });
     }
   }
@@ -852,15 +892,18 @@
   });
 
   /* ---------------- caption placement: just under the graphics ---------------- */
+  let stageSize = null;
   function stageGeom() {
     const vb = stage.viewBox.baseVal;
-    const k = Math.min(stage.clientWidth / vb.width, stage.clientHeight / vb.height);
-    return { vb, k, ox: (stage.clientWidth - vb.width * k) / 2, oy: (stage.clientHeight - vb.height * k) / 2 };
+    if (!stageSize) stageSize = { width: stage.clientWidth, height: stage.clientHeight };
+    const { width, height } = stageSize;
+    const k = Math.min(width / vb.width, height / vb.height);
+    return { vb, k, ox: (width - vb.width * k) / 2, oy: (height - vb.height * k) / 2 };
   }
   function placeCaptions() {
     const box = $('.captions');
     const { vb, k, ox, oy } = stageGeom();
-    box.style.top = oy + (CAPTION_Y - vb.y) * k + 'px';
+    box.style.transform = `translateY(${oy + (CAPTION_Y - vb.y) * k}px)`;
     box.style.left = ox + 150 * k + 'px';
     box.style.width = 1300 * k + 'px';
     box.style.fontSize = Math.max(15, 50 * k) + 'px';
@@ -879,7 +922,7 @@
       arrowPaths[key].setAttribute('d', `M${fx} ${fy} Q${(fx + tx) / 2 + bend} ${(fy + ey) / 2 + (down ? -6 : 10)} ${tx} ${ey}`);
     }
   }
-  const layout = () => { placeCaptions(); layoutArrows(); };
+  const layout = () => { stageSize = null; placeCaptions(); layoutArrows(); };
   layout();
   // The pinned section is re-sized by ScrollTrigger after the window's resize event, so lay out
   // whenever the stage itself changes size and after every ScrollTrigger refresh.
@@ -891,20 +934,32 @@
 
   /* ---------------- tooltips, clicks, and which icons are currently interactive ---------------- */
   const icons = [...stage.querySelectorAll('.icon')];
-  const effOpacity = (n) => {
+  const effOpacity = (n, cache) => {
     let o = 1;
     for (; n && n !== stage; n = n.parentNode) {
-      const cs = getComputedStyle(n);
+      let cs = cache && cache.get(n);
+      if (!cs) {
+        cs = getComputedStyle(n);
+        // Snapshot values before any class writes invalidate computed styles.
+        cs = { visibility: cs.visibility, display: cs.display, opacity: cs.opacity };
+        if (cache) cache.set(n, cs);
+      }
       if (cs.visibility === 'hidden' || cs.display === 'none') return 0;
       o *= parseFloat(cs.opacity);
     }
     return o;
   };
   function updateLive() {
-    icons.forEach((ic) => ic.classList.toggle('live', effOpacity(ic) > 0.5));
+    const cache = new WeakMap();
+    const live = icons.map((ic) => effOpacity(ic, cache) > 0.5);
+    icons.forEach((ic, i) => ic.classList.toggle('live', live[i]));
   }
-  let liveTick = 0;
-  gsap.ticker.add(() => { if (++liveTick % 6 === 0) updateLive(); });
+  let liveTime = -1, liveTick = 0;
+  gsap.ticker.add(() => {
+    if (document.hidden || !storyVisible || ++liveTick % 6 !== 0 || liveTime === tl.time()) return;
+    liveTime = tl.time();
+    updateLive();
+  });
 
   const tip = document.createElement('div');
   tip.className = 'tip';
@@ -989,6 +1044,6 @@
     requestAnimationFrame(() => window.scrollTo(0, st.start + (st.end - st.start) * (parseFloat(q) / tl.duration())));
   }
   // re-measure text-dependent layout (used by the temporary font picker)
-  const relayout = () => { layoutSentence(); layout(); };
+  const relayout = () => { layoutSentence(); layout(); renderedTime = -1; };
   window.__story = { tl, P, st: storyST, relayout };
 })();
