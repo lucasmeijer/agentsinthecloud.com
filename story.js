@@ -719,7 +719,14 @@
   // 1 — "favorite coding agent": Claude Code's tile drops into the Mac
   tl.to('.scroll-hint', { autoAlpha: 0, duration: 0.4 }, 0);
   tl.to(orbit, { opacity: 0, duration: 0.15, ease: 'none' }, 0);
-  tl.to(P.sentence, { c: 1, y: CAPTION_Y + 44, s: 50 / SENT_FONT, duration: 0.45 }, 0.02);
+  if (PORTRAIT) {
+    // phone captions are too big for the one-line sentence, so it hands over to a wrapping caption
+    caps[0].classList.remove('sr-only');
+    caps[0].innerHTML = 'Take your <span class="accent" style="color:#955d2d">favorite</span> coding agent,';
+    tl.to(P.sentence, { c: 1, y: CAPTION_Y + 44, duration: 0.45 }, 0.02);
+    tl.to(P.sentence, { o: 0, duration: 0.15, ease: 'none' }, 0.32);
+    tl.to(caps[0], { autoAlpha: 1, duration: 0.2, ease: 'none' }, 0.32);
+  } else tl.to(P.sentence, { c: 1, y: CAPTION_Y + 44, s: 50 / SENT_FONT, duration: 0.45 }, 0.02);
   tl.to(P.laptop, { o: 1, duration: 0.3 }, 0.3);
   tl.to(P.claudeBig, { ...local(LAPTOP.A, 309, 190), s: 1.4 * LAPTOP.A.s / 1.35, r: 0, duration: 0.6, ease: 'power2.inOut' }, 0.02);
   tl.to(P.claudeBig, { o: 0, duration: 0.15 }, 0.55);
@@ -729,6 +736,7 @@
 
   // 2 — browser, terminal and VS Code open next to it
   tl.to(P.sentence, { o: 0, duration: 0.4, ease: 'power1.in' }, STEPS[1]);
+  tl.to(caps[0], { autoAlpha: 0, duration: 0.4, ease: 'power1.in' }, STEPS[1]); // caption() skips index 0
   caption(0, 1, STEPS[1]);
   tl.to(lapWins[0], { attr: WIN_CASCADE[0], duration: 0.8 }, 2.8);
   [1, 2, 3].forEach((i) => {
@@ -906,18 +914,49 @@
     box.style.transform = `translateY(${oy + (CAPTION_Y - vb.y) * k}px)`;
     box.style.left = ox + 150 * k + 'px';
     box.style.width = 1300 * k + 'px';
-    box.style.fontSize = Math.max(15, 50 * k) + 'px';
+    box.style.fontSize = (PORTRAIT ? 2 : 1) * Math.max(15, 50 * k) + 'px'; // phones get double-size captions
   }
+  // Phone captions wrap, so the app icons sit inline right after their word instead of at the end of an arrow.
+  const INLINE_ICONS = PORTRAIT ? ['chrome', 'ghostty', 'vscode'] : [];
+  const iconSlots = {};
+  INLINE_ICONS.forEach((key) => {
+    const word = document.querySelector(`[data-arrow="${key}"]`), keep = document.createElement('span');
+    keep.style.whiteSpace = 'nowrap'; // never break between a word and its icon
+    word.before(keep); keep.append(word);
+    iconSlots[key] = keep.appendChild(Object.assign(document.createElement('span'), { className: 'icon-slot' }));
+  });
+  const screenToStage = (x, y) => { const { vb, k, ox, oy } = stageGeom(), sr = stage.getBoundingClientRect(); return [vb.x + (x - sr.left - ox) / k, vb.y + (y - sr.top - oy) / k]; };
   // arrows start at the top of their caption word, so they're laid out from the word's real position
   function layoutArrows() {
-    const { vb, k, ox, oy } = stageGeom(), sr = stage.getBoundingClientRect();
+    const { vb } = stageGeom();
+    for (const key of INLINE_ICONS) {
+      const r = iconSlots[key].getBoundingClientRect(), [cx, cy] = screenToStage(r.left + r.width / 2, r.top + r.height / 2);
+      const s = (screenToStage(r.left + r.height, 0)[0] - screenToStage(r.left, 0)[0]) / 78; // a tile one line-height tall
+      const wrap = appTiles[key].parentNode;
+      wrap.setAttribute('transform', `translate(${cx} ${cy}) rotate(${wrap.transform.baseVal.getItem(1)?.angle || 0}) scale(${s})`);
+      arrowPaths[key].setAttribute('d', '');
+    }
     for (const key in ARROWS) {
-      const w = document.querySelector(`[data-arrow="${key}"]`).getBoundingClientRect();
-      const [tx, ty] = ARROWS[key];
-      const fx = vb.x + (w.left + w.width / 2 - sr.left - ox) / k;
-      const top = vb.y + (w.top - sr.top - oy) / k, bottom = vb.y + (w.bottom - sr.top - oy) / k;
-      const down = ty > bottom;
-      const fy = down ? bottom + 4 : top - 8, ey = down ? ty - 50 : ty + 22;
+      if (INLINE_ICONS.includes(key)) continue;
+      const word = document.querySelector(`[data-arrow="${key}"]`), [tx, ty] = ARROWS[key];
+      const rects = [...word.getClientRects()], whole = word.getBoundingClientRect();
+      const [, bottom] = screenToStage(0, whole.bottom), down = ty > bottom;
+      // the word's fragment on the line nearest the logo (a phrase can report several boxes per line)
+      const near = down ? rects[rects.length - 1] : rects[0], line = rects.filter((r) => Math.abs(r.top - near.top) < 2);
+      const w = { left: Math.min(...line.map((r) => r.left)), right: Math.max(...line.map((r) => r.right)), top: near.top, bottom: near.bottom, height: near.height };
+      w.width = w.right - w.left;
+      const [fx] = screenToStage(w.left + w.width / 2, 0), [, top] = screenToStage(0, w.top), [, wBottom] = screenToStage(0, w.bottom);
+      const fy = down ? wBottom + 4 : top - 8, ey = down ? ty - 50 : ty + 22;
+      // a word on a lower line can't point straight up through the line above, so it curves out around the text
+      const cap = word.closest('.caption'), capTop = cap.getBoundingClientRect().top;
+      if (!down && w.top - capTop > w.height / 2) {
+        const above = [...cap.querySelectorAll('.kw')].flatMap((e) => [...e.getClientRects()]).filter((r) => r.bottom <= w.top + 1);
+        const right = tx > screenToStage((Math.min(...above.map((r) => r.left)) + Math.max(...above.map((r) => r.right))) / 2, 0)[0]; // go round the side facing the logo
+        const [edge] = screenToStage(right ? Math.max(...above.map((r) => r.right)) : Math.min(...above.map((r) => r.left)), 0);
+        const [sx] = screenToStage(right ? w.right : w.left, 0), [, sy] = screenToStage(0, w.top + w.height / 2), out = Math.min(vb.x + vb.width - 10, Math.max(vb.x + 10, edge + (right ? 170 : -170)));
+        arrowPaths[key].setAttribute('d', `M${sx + (right ? 10 : -10)} ${sy} C${out} ${sy} ${out} ${ey + 60} ${tx} ${ey}`);
+        continue;
+      }
       const bend = (tx > fx ? -1 : 1) * (down ? 40 : 70);
       arrowPaths[key].setAttribute('d', `M${fx} ${fy} Q${(fx + tx) / 2 + bend} ${(fy + ey) / 2 + (down ? -6 : 10)} ${tx} ${ey}`);
     }
@@ -1028,10 +1067,12 @@
     railShown = t;
     railFill.style.height = (100 * t) / tl.duration() + '%';
   });
+  // Touch swipes fling much further than a wheel notch, so stretch the story's scroll length on touch screens.
+  const SCROLL_PER_SEC = matchMedia('(pointer: coarse)').matches ? 0.4 : 0.16; // fraction of viewport height
   const storyST = ScrollTrigger.create({
     trigger: '#story',
     start: 'top top',
-    end: () => '+=' + Math.round(tl.duration() * window.innerHeight * 0.16),
+    end: () => '+=' + Math.round(tl.duration() * window.innerHeight * SCROLL_PER_SEC),
     pin: true,
     scrub: 0.4,
     animation: tl,
