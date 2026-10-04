@@ -34,7 +34,7 @@ async function seek(page, time) {
           const box = document.querySelector('.captions');
           const vb = stage.viewBox.baseVal;
           const k = Math.min(stage.clientWidth / vb.width, stage.clientHeight / vb.height);
-          const expected = (stage.clientHeight - vb.height * k) / 2 + (925 - vb.y) * k;
+          const expected = (stage.clientHeight - vb.height * k) / 2 + (925 - window.__story.camY()) * k; // portrait pans a group, not the viewBox
           return {
             captionError: Math.abs(box.getBoundingClientRect().top - stage.getBoundingClientRect().top - expected),
             grain: getComputedStyle(stage.querySelector('[filter="url(#paint-grain)"]')).filter,

@@ -93,6 +93,9 @@
     closet: $('#layer-closet'), beams: $('#layer-beams'), laptop: $('#layer-laptop'), cloud: $('#layer-cloud'),
     fly: $('#layer-fly'), logos: $('#layer-logos'), badges: $('#layer-badges'),
   };
+  // Portrait pans by translating one group: changing the viewBox would re-lay out the whole SVG every frame.
+  const camG = el('g', {}, stage);
+  if (PORTRAIT) { Object.values(L).forEach((layer) => camG.append(layer)); stage.setAttribute('viewBox', `0 ${CAM.tall} 1600 ${VB_H}`); }
 
   /* ---------------- icons: hover lift, tooltip, click opens the site ---------------- */
   const LINKS = {
@@ -426,6 +429,44 @@
   });
   const flyers = APPS.map((a, i) => use('#w-' + a, flyFrom[i].x, flyFrom[i].y, flyFrom[i].width, flyFrom[i].height, L.fly, { opacity: 0 }));
 
+  // The flying and cloud windows rescale every frame, and Chrome re-lays out all of their (deep, text-heavy) <use>
+  // copies on each scale change. Once loaded, point them at a bitmap snapshot of the same window instead.
+  async function snapshotWindows() {
+    const dataUrl = async (url) => {
+      const blob = await (await fetch(url)).blob();
+      return new Promise((done) => { const r = new FileReader(); r.onload = () => done(r.result); r.readAsDataURL(blob); });
+    };
+    const [raleway, mono] = await Promise.all([dataUrl('/assets/fonts/raleway.woff2'), dataUrl('/assets/fonts/jetbrains-mono-latin-400-normal.woff2')]);
+    const css = `@font-face{font-family:Raleway;font-weight:100 900;src:url(${raleway})}@font-face{font-family:'JetBrains Mono';src:url(${mono})}`
+      + `.sans{font-family:Raleway,sans-serif}.mono{font-family:'JetBrains Mono',monospace}`;
+    const defs = new XMLSerializer().serializeToString($('#stage defs'));
+    // sharp enough for the biggest flyer, which starts out exactly over its laptop window
+    const k = Math.min(stage.clientWidth / 1600, stage.clientHeight / stage.viewBox.baseVal.height);
+    const scale = Math.min(3, Math.max(1, Math.max(...flyFrom.map((f) => f.width)) * k * devicePixelRatio / 520));
+    const W = Math.round(520 * scale), H = Math.round(320 * scale);
+    const NS = 'http://www.w3.org/2000/svg';
+    const defsEl = $('#stage defs');
+    for (const a of APPS) {
+      const svg = `<svg xmlns="${NS}" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 520 320"><style>${css}</style>${defs}<use href="#w-${a}" width="520" height="320"/></svg>`;
+      const img = new Image();
+      img.src = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }));
+      await img.decode();
+      const canvas = Object.assign(document.createElement('canvas'), { width: W, height: H });
+      canvas.getContext('2d').drawImage(img, 0, 0, W, H);
+      URL.revokeObjectURL(img.src);
+      const png = await new Promise((done) => canvas.toBlob(done));
+      const bitmap = new Image();
+      bitmap.src = URL.createObjectURL(png);
+      await bitmap.decode();
+      const sym = document.createElementNS(NS, 'symbol');
+      sym.id = 'wb-' + a; sym.setAttribute('viewBox', '0 0 520 320');
+      el('image', { href: bitmap.src, width: 520, height: 320 }, sym);
+      defsEl.append(sym);
+      for (const u of [flyers[APPS.indexOf(a)], ...envsG.querySelectorAll(`use.win[href="#w-${a}"]`)]) u.setAttribute('href', '#wb-' + a);
+    }
+  }
+  addEventListener('load', () => (window.requestIdleCallback || setTimeout)(() => snapshotWindows().catch(() => {})), { once: true });
+
   /* ---------------- beams ---------------- */
   const beamsG = el('g', { opacity: 0 }, L.beams);
   const beamPaths = [0, 1].map((k) => {
@@ -586,7 +627,12 @@
     attr(sentence, 'transform', `translate(${800 - sentDx * P.sentence.s * P.sentence.c} ${P.sentence.y}) scale(${P.sentence.s}) translate(-800 ${-SENT_BASE})`);
     attr(sentence, 'opacity', P.sentence.o);
   };
-  const place = (node, p) => { attr(node, 'transform', `translate(${p.x} ${p.y}) scale(${p.s})` + (p.r ? ` rotate(${p.r})` : '')); attr(node, 'opacity', p.o); };
+  // Fully transparent groups still get laid out (and their <use> text reshaped) on every scale change, so drop them.
+  const place = (node, p) => {
+    attr(node, 'display', p.o > 0 ? 'inline' : 'none');
+    if (p.o > 0) attr(node, 'transform', `translate(${p.x} ${p.y}) scale(${p.s})` + (p.r ? ` rotate(${p.r})` : ''));
+    attr(node, 'opacity', p.o);
+  };
   const local = (p, x, y) => ({ x: p.x + p.s * x, y: p.y + p.s * y });
   let typedShown = -1, promptShown = '', shellShown = -1, replyShown = -1, camShown = null;
   // where the wires plug in: the left edge of the focused environment (its bottom edge in portrait);
@@ -602,6 +648,7 @@
     return { x: points.reduce((v, p, i) => v + w[i] * p.x, 0), y: points.reduce((v, p, i) => v + w[i] * p.y, 0) };
   }
   let renderedTime = -1;
+  const screenParts = [...screen.children];
   function render(time) {
     if (document.hidden || !storyVisible) return;
     const timelineTime = tl.time();
@@ -628,6 +675,8 @@
       attr(urlCaret, 'x', 93 + (n ? urlText.getComputedTextLength() : 0));
     }
     place(lap, P.laptop);
+    // same for the laptop screen's windows and browser: GSAP fades them by style, the initial state is an attribute
+    for (const n of screenParts) attr(n, 'display', parseFloat(n.style.opacity || n.getAttribute('opacity') || 1) > 0 ? 'inline' : 'none');
     // the lid rotates forward about the hinge: it foreshortens, and its top edge comes towards us (a little wider)
     const lidA = (1 - P.lid.k) * Math.PI / 2, lidCos = Math.cos(lidA);
     attr(lidG, 'transform', P.lid.k === 1 ? '' : `translate(320 416) scale(${1 + 0.06 * Math.sin(lidA)} ${lidCos}) translate(-320 -416)`);
@@ -646,7 +695,7 @@
     place(cloudG, P.cloud);
     place(claudeBigG, P.claudeBig);
     placeSentence();
-    if (PORTRAIT && P.cam.y !== camShown) { camShown = P.cam.y; attr(stage, 'viewBox', `0 ${camShown} 1600 ${VB_H}`); placeCaptions(); }
+    if (PORTRAIT && P.cam.y !== camShown) { camShown = P.cam.y; attr(camG, 'transform', `translate(0 ${CAM.tall - camShown})`); placeCaptions(); }
     P.envs.forEach((p, i) => place(envNodes[i], p));
     attr(beamsG, 'opacity', P.beams.o);
     if (P.beams.o > 0.001) {
@@ -902,7 +951,7 @@
   /* ---------------- caption placement: just under the graphics ---------------- */
   let stageSize = null;
   function stageGeom() {
-    const vb = stage.viewBox.baseVal;
+    const b = stage.viewBox.baseVal, vb = { x: b.x, y: PORTRAIT ? P.cam.y : b.y, width: b.width, height: b.height };
     if (!stageSize) stageSize = { width: stage.clientWidth, height: stage.clientHeight };
     const { width, height } = stageSize;
     const k = Math.min(width / vb.width, height / vb.height);
@@ -1086,5 +1135,5 @@
   }
   // re-measure text-dependent layout (used by the temporary font picker)
   const relayout = () => { layoutSentence(); layout(); renderedTime = -1; };
-  window.__story = { tl, P, st: storyST, relayout };
+  window.__story = { tl, P, st: storyST, relayout, camY: () => (PORTRAIT ? P.cam.y : stage.viewBox.baseVal.y) };
 })();
