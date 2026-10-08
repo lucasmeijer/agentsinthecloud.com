@@ -120,25 +120,19 @@
     .learn h2 { margin: 0; font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 450; letter-spacing: -.03em; line-height: 1.1; text-align: center; text-wrap: balance; }
     .learn h2 .strong, .learn h2 .accent { font-weight: 650; }
     .learn h2 .accent { color: var(--color-accent); }
-    .one-video { display: flex; flex-direction: column; align-items: center; gap: clamp(1.5rem, 4vh, 2.5rem); }
     .frame { background: #fffaf2; border: 3px solid var(--ink); border-radius: 26px; box-shadow: 0 3px 6px #58432f12, 0 18px 40px #58432f26; padding: 10px; }
     .frame .video { border-radius: 16px; overflow: hidden; background: var(--ink); }
     .video iframe { display: block; width: 100%; height: 100%; border: 0; }
-    .one-video .frame { width: min(100%, 340px); transform: rotate(-1.2deg); }
-    .one-video .video { aspect-ratio: 1080 / 1920; }
-    .more { width: min(100%, 72rem); text-align: center; }
-    .more > summary, .faq summary { list-style: none; cursor: pointer; }
-    .more > summary::-webkit-details-marker, .faq summary::-webkit-details-marker { display: none; }
-    .more > summary { display: flex; width: fit-content; margin: 0 auto; align-items: center; gap: 10px; border: 3px solid var(--ink); background: #f6e3c8; color: var(--ink); border-radius: 999px; padding: 10px 22px; font-size: 1.15rem; font-weight: 550; letter-spacing: -.02em; box-shadow: 0 3px 8px #58432f33; transition: transform .18s cubic-bezier(.3, 1.6, .5, 1); }
-    .more > summary:hover { transform: translateY(-3px) rotate(-1.5deg); }
-    .more > summary::after, .faq summary::after { content: "+"; font-weight: 700; color: var(--color-accent); transition: transform .2s; }
-    .more[open] > summary::after, .faq details[open] summary::after { transform: rotate(45deg); }
-    .video-grid { list-style: none; margin: 2.5rem 0 0; padding: 0; width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr)); gap: clamp(20px, 3vw, 36px); }
+    .faq summary { list-style: none; cursor: pointer; }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after { content: "+"; font-weight: 700; color: var(--color-accent); transition: transform .2s; }
+    .faq details[open] summary::after { transform: rotate(45deg); }
+    .video-grid { list-style: none; margin: 0; padding: 0; width: min(100%, 72rem); display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr)); gap: clamp(20px, 3vw, 36px); }
     .video-grid li { display: flex; flex-direction: column; gap: 12px; text-align: left; }
     .video-grid li:nth-child(odd) .frame { transform: rotate(-.6deg); }
     .video-grid li:nth-child(even) .frame { transform: rotate(.6deg); }
     .video-grid h3 { margin: 0 6px; font-size: clamp(1.1rem, 1.6vw, 1.3rem); font-weight: 550; letter-spacing: -.02em; }
-    .video-grid .video { aspect-ratio: 16 / 9; }
+    .video-grid .video { aspect-ratio: 4 / 3; }
     .faq { width: min(100%, 44rem); display: flex; flex-direction: column; gap: 1.5rem; }
     .faq-list { display: grid; gap: 14px; }
     .faq details { background: #fffaf2; border: 3px solid var(--ink); border-radius: 20px; box-shadow: 0 3px 6px #58432f12, 0 10px 24px #58432f1f; }
@@ -439,25 +433,15 @@
 </section>
 
 <section class="learn" id="learn" aria-label="Learn more">
-  <div class="one-video">
-    <h2>If you only watch <span class="strong">one video,</span> <span class="accent">watch this short one!</span></h2>
-    <div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtrgqf7l01fh0agmatvu18vg/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="AgentsInTheCloud in under a minute" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div>
-  </div>
-  <details class="more">
-    <summary>Ten more videos</summary>
-    <ul class="video-grid">
-      <li><h3>Remote development experience</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtmxa27u00bg0agm0c3bd8sg/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Remote development experience" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
-      <li><h3>Evaluating agent work</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtmwk9k9014l0agm0lhybqop/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Evaluating agent work" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
-      <li><h3>Fire &amp; forget for mental bandwidth</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtmzsz8a000g0agm91cw4c07/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Fire &amp; forget for mental bandwidth" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
-      <li><h3>On my phone?</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtn3k1e000sv09gmerlba9rl/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="On my phone?" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
-      <li><h3>Mini quality of life features</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtn2ej0a019209gm2ds97gin/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Mini quality of life features" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
-      <li><h3>Secrets</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtn16hh401gg0agm2k3z59br/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Secrets" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
-      <li><h3>Are cloud agents a good idea for me?</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtmuv6vb000s0bgmfkq1aw6h/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Are cloud agents a good idea for me?" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
-      <li><h3>Installing AgentsInTheCloud</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtn2t2ic00g80agm1wce4yvs/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Installing AgentsInTheCloud" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
-      <li><h3>Remote development experience</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtmxa27u00bg0agm0c3bd8sg/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Remote development experience" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
-      <li><h3>Evaluating agent work</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmtmwk9k9014l0agm0lhybqop/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Evaluating agent work" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
-    </ul>
-  </details>
+  <ul class="video-grid">
+      <li><h3>Remote Development Experience</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmuyfaf8w002305mlbceb656j/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Remote Development Experience" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
+      <li><h3>Evaluating agent work</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmuzbsejo003606p1emj1hu2o/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Evaluating agent work" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
+      <li><h3>Protecting your mental bandwidth</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmuzcdso900fr06ny07f333y5/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Protecting your mental bandwidth" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
+      <li><h3>Using Pi</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmuzapl9m007k05pf3k3z4jeq/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Using Pi with AgentsInTheCloud" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
+      <li><h3>Using Claude Code</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmuza0jel00x006qk8q2g4exq/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Using Claude Code with AgentsInTheCloud" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
+      <li><h3>Installing</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmuzd6fcq005x06lbgfarhhcj/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="Installing" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
+      <li><h3>On the go - Mobile experience</h3><div class="frame"><div class="video"><iframe src="https://www.tella.tv/video/vid_cmuzhgeij001z05qwgmal7gq9/embed?b=0&amp;title=0&amp;a=0&amp;loop=0&amp;t=0&amp;muted=0&amp;wt=1&amp;o=1" title="On the go - Mobile experience" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div></li>
+  </ul>
   <div class="faq">
     <h2><span class="strong">Questions?</span> <span class="accent">Answers.</span></h2>
     <div class="faq-list">
